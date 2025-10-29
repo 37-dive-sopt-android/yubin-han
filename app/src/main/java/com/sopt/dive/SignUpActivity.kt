@@ -52,7 +52,7 @@ class SignUpActivity : ComponentActivity() {
         setContent {
             DiveTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Week1assignment2(
+                    signup(
                         paddingValues = innerPadding,
                         onSignUpClick = { idText, pwText, nicknameText,hobbyText ->
                             val intent=Intent(this,
@@ -69,7 +69,7 @@ class SignUpActivity : ComponentActivity() {
                             setResult(RESULT_OK,intent)
                             finish()
 
-                            }
+                        }
                     )
 
                 }
@@ -80,7 +80,7 @@ class SignUpActivity : ComponentActivity() {
 
 
 @Composable
-fun Week1assignment2(
+fun signup(
     paddingValues: PaddingValues,
     onSignUpClick: (String, String, String, String) -> Unit
 
@@ -136,7 +136,7 @@ fun Week1assignment2(
     )
 }
 @Composable
-fun SignUpScreen(
+private fun SignUpScreen(
     paddingValues: PaddingValues,
     idText: String,
     pwText: String,
@@ -312,7 +312,8 @@ fun SignUpScreen(
 
 
         Button(
-            onClick = { onSignUpClick() },
+            onClick = onSignUpClick ,
+
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Blue,
                 contentColor = Color.White
@@ -333,7 +334,7 @@ fun SignUpScreen(
 @Composable
 fun Week1assignmentPreview2() {
     DiveTheme {
-        Week1assignment2(
+        signup(
             paddingValues = PaddingValues(),
             onSignUpClick = { _, _, _, _ -> } // Preview용 더미
         )

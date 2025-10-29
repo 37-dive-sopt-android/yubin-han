@@ -50,9 +50,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sopt.dive.ui.theme.DiveTheme
 
+
 class LoginActivity : ComponentActivity() {
 
-    private val signup = registerForActivityResult(
+    //회원가입에서 받아온 상태
+    var savedId by mutableStateOf<String>("")
+    var savedPw by mutableStateOf<String>("")
+    var savedNickname by mutableStateOf<String>("")
+    var savedHobby by mutableStateOf<String>("")
+
+    // 상태를 업데이트하는 함수 (콜백으로 전달될 함수)
+    val updateSavedCredentials: (id: String, pw: String, nickname: String, hobby: String) -> Unit =
+        { id, pw, nickname, hobby ->
+            savedId= id
+            savedPw = pw
+            savedNickname =nickname
+            savedHobby=hobby
+        }
+
+
+
+    val signup = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -60,14 +78,18 @@ class LoginActivity : ComponentActivity() {
             val data: Intent? = result.data // SignUpActivity에서 보낸 Intent
 
 
-            val userID = data?.getStringExtra("ID")
-            val userPW = data?.getStringExtra("PW")
-            val userNICKNAME = data?.getStringExtra("NICKNAME")
-            val userHOBBY = data?.getStringExtra("HOBBY")
+            val userID = data?.getStringExtra("ID")!!
+            val userPW = data?.getStringExtra("PW")!!
+            val userNICKNAME = data?.getStringExtra("NICKNAME")!!
+            val userHOBBY = data?.getStringExtra("HOBBY")!!
+
+            updateSavedCredentials(userID,userPW,userNICKNAME,userHOBBY)
+
 
         }
 
     }
+
     fun navigateToMain(
         context: Context,
         id: String, pw: String, nickname: String, hobby: String
@@ -79,7 +101,7 @@ class LoginActivity : ComponentActivity() {
             putExtra("HOBBY", hobby)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
-        context.startActivity(intent)
+        startActivity(intent)
     }
 
 
@@ -102,27 +124,15 @@ class LoginActivity : ComponentActivity() {
 }
 
 
-
 @Composable
 fun Week1assignment(
     paddingValues: PaddingValues,
-    activity: LoginActivity?=null
+    activity: LoginActivity? = null
 ) {
 
     //로그인 창 입력 상태
     var idText by remember { mutableStateOf("") }
     var pwText by remember { mutableStateOf("") }
-
-    //회원가입에서 받아온 상태
-    var savedId by remember { mutableStateOf<String>("") }
-    var savedPw by remember { mutableStateOf<String>("") }
-    var savedNickname by remember { mutableStateOf<String>("") }
-    var savedHobby by remember { mutableStateOf<String>("") }
-
-    // 상태를 업데이트하는 함수 (콜백으로 전달될 함수)
-    val updateSavedCredentials: (id: String, pw: String) -> Unit = { id, pw ->
-        savedId = id
-        savedPw = pw}
 
 
     val context = LocalContext.current
@@ -131,7 +141,7 @@ fun Week1assignment(
 
 
 
-    Column (
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(30.dp)
@@ -163,8 +173,8 @@ fun Week1assignment(
             },
             placeholder = {
                 Text(
-                    text = "아이디를 입력해주세요",color=Color.LightGray
-                    )
+                    text = "아이디를 입력해주세요", color = Color.LightGray
+                )
             },
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -179,7 +189,8 @@ fun Week1assignment(
                 focusedContainerColor = Color.Transparent,    // 배경 투명
                 unfocusedContainerColor = Color.Transparent,
                 disabledContainerColor = Color.Transparent,
-                errorContainerColor = Color.Transparent)
+                errorContainerColor = Color.Transparent
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -193,11 +204,11 @@ fun Week1assignment(
 
         TextField(
             value = pwText,
-            onValueChange = { value -> pwText = value},
+            onValueChange = { value -> pwText = value },
             placeholder = {
                 Text(
-                    text = "비밀번호를 입력해주세요",color=Color.LightGray
-                    )
+                    text = "비밀번호를 입력해주세요", color = Color.LightGray
+                )
             },
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
@@ -217,7 +228,7 @@ fun Week1assignment(
                 unfocusedContainerColor = Color.Transparent,
                 disabledContainerColor = Color.Transparent,
                 errorContainerColor = Color.Transparent
-               )
+            )
         )
 
 
@@ -226,29 +237,33 @@ fun Week1assignment(
 
 
 
-            Button(
-            onClick = {  //성공 조건 추가
-                if(idText==savedId&&pwText==savedPw){
+        Button(
+            onClick = {
+                //성공 조건 추가
+                if ((idText ==  activity?.savedId&&idText.isNotBlank() )&& (pwText == activity.savedPw && pwText.isNotBlank()) )
+                {
 
-                    Toast.makeText(context,
+                    Toast.makeText(
+                        context,
                         "로그인에 성공했습니다.",
                         Toast.LENGTH_SHORT
                     ).show()
                     activity?.navigateToMain(
                         context,
-                        savedId,
-                        savedPw,
-                        savedNickname,
-                        savedHobby
+                        activity.savedId,
+                        activity.savedPw,
+                        activity.savedNickname,
+                        activity.savedHobby
                     )
-                }else{
-                    Toast.makeText(context,
+                } else {
+                    Toast.makeText(
+                        context,
                         "회원가입 정보가 없습니다.",
                         Toast.LENGTH_SHORT,
 
-                    ).show()
+                        ).show()
                 }
-                      },
+            },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Blue,
                 contentColor = Color.White
@@ -256,7 +271,7 @@ fun Week1assignment(
             modifier = Modifier
                 .fillMaxWidth(),
             shape = RoundedCornerShape(16.dp)
-        ){
+        ) {
             Text(
                 text = "Welcome To SOPT"
             )
@@ -267,27 +282,25 @@ fun Week1assignment(
         Text(
             text = "회원가입하기",
             textDecoration = TextDecoration.Underline,
-            modifier = Modifier.fillMaxWidth()
-                .clickable{
-                    val intent = Intent(context, SignUpActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                    }
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    val intent = Intent(context, SignUpActivity::class.java)
 
-                    context.startActivity(intent)
+                    activity?.signup?.launch(intent)
                 },
             textAlign = TextAlign.Center
 
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
-fun Week1assignmentPreview() {
+private fun Week1assignmentPreview() {
     DiveTheme {
         Week1assignment(
             paddingValues = PaddingValues()
         )
     }
 }
-
-

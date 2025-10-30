@@ -40,7 +40,7 @@ fun AppNavHost(
     ){
         //홈
         composable(Screen.Home.route){
-            HomeScreen()
+            HomeScreen(userNickname=userNickname)
         }
         //서치
         composable(Screen.Search.route)

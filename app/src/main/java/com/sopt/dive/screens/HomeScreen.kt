@@ -1,5 +1,6 @@
 package com.sopt.dive.screens
 
+import android.provider.ContactsContract
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -12,6 +13,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,17 +32,25 @@ import com.sopt.dive.ui.theme.DiveTheme
 
 
 //더미
-val dummyProfile = ProfileSummary("yukong", "하이방가방가", R.drawable.yangpa) // R.drawable.yangpa는 가정한 리소스 ID
 val dummyFeeds = listOf(
     FeedItem("한유빈", "집가고 싶다", R.drawable.yangpa),
     FeedItem("유콩", "하루종일 놀고싶다", R.drawable.yangpa),
     FeedItem("쿵야", "붕어빵 먹고싶다", R.drawable.yangpa),
-    // ... 실제 데이터는 더 많을 것
+    FeedItem("영수", "고독정식 먹기 싫어", R.drawable.yangpa),
+    FeedItem("옥순", "나랑 데이트할래?", R.drawable.yangpa),
+    FeedItem("정숙", "나 헷갈리게 하지마", R.drawable.yangpa),
+    FeedItem("상철", "맛있는거 먹으러가자", R.drawable.yangpa)
+
 )
-val dummyStats = listOf("게시물 12", "팔로워 300", "팔로잉 400", "좋아요 100")
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(userNickname: String) {
+    val userProfile = ProfileSummary(
+        nickname = userNickname,
+        statusMessage ="하이루방가",
+        profileImageResId = R.drawable.yangpa
+    )
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -50,31 +60,15 @@ fun HomeScreen() {
 
         //사용자 프로필 헤더
         item {
-            ProfileInfoItemComponent(dummyProfile.nickname,dummyProfile.statusMessage,"자기소개")
-            Spacer(modifier = Modifier.height(20.dp))
+            ProfileHeaderComponent(profile =userProfile)
+            Spacer(modifier = Modifier.height(30.dp))
         }
 
-        //프로필 관련 컴포넌트
-        item {
-            // LazyVerticalGrid: 유저 프로필 통계 정보를 2열 그리드로 표시
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2), // 2열 그리드
-                contentPadding = PaddingValues(0.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp) // 높이를 명시적으로 지정하거나, 내부 컨텐츠에 따라 조절해야 함
-            ) {
-                items(dummyStats) { stat ->
-                    StatCard(text=stat)
-                }
-            }
-            Spacer(modifier = Modifier.height(20.dp))
-        }
 
         //피드목록 피드아이템 리스트를 기반으로 아이템 반복 생성하는 코드
 
         items(dummyFeeds.size) { index ->
-            // 더미 데이터가 부족하여 반복적으로 표시합니다.
+            // 더미 데이터가 부족하여 반복적으로 표시
             val feed = dummyFeeds[index % dummyFeeds.size]
             FeedItemCard(feed=feed)
             Spacer(modifier = Modifier.height(10.dp))
@@ -83,7 +77,6 @@ fun HomeScreen() {
 }
 
 
-// --- 재사용 가능한 Compose Component ---
 
 // Home 화면 상단 프로필 요약
 @Composable
@@ -99,13 +92,13 @@ fun ProfileHeaderComponent(profile: ProfileSummary) {
         )
         Spacer(modifier = Modifier.width(16.dp))
         Column {
-            Text(text = profile.nickname, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            Text(text = profile.statusMessage, fontSize = 16.sp, color = Color.Gray)
+            Text(text = profile.nickname, fontSize = 25.sp, fontWeight = FontWeight.Bold)
+            Text(text = profile.statusMessage, fontSize = 16.sp, color = Color.Black
+            )
         }
     }
 }
 
-// LazyVerticalGrid 내부에 들어갈 통계 카드
 @Composable
 fun StatCard(text: String) {
     Card(
@@ -118,7 +111,6 @@ fun StatCard(text: String) {
     }
 }
 
-// Feed 목록 아이템 (image_7b62a0.jpg의 하단 목록 스타일)
 @Composable
 fun FeedItemCard(feed: FeedItem) {
     Card(
@@ -148,8 +140,8 @@ fun FeedItemCard(feed: FeedItem) {
 
 @Preview(showBackground = true)
 @Composable
-fun Week1assignmentPreview() {
+fun HomeScreentPreview() {
     DiveTheme {
-        HomeScreen()
+        HomeScreen(userNickname ="유콩이야이야")
     }
 }

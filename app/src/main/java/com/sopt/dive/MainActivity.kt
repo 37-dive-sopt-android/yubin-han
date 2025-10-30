@@ -66,14 +66,14 @@ fun MainScreen(userId: String,userPw: String,userNickname: String,userHobby: Str
             userPw=userPw,
             userNickname=userNickname,
             userHobby=userHobby
-        )
+         )
     }
 
 }
 
 @Preview(showBackground = true)
 @Composable
-fun Week1assignmentPreview3() {
+fun MainScreenPreview() {
     DiveTheme {
         MainScreen(
             userId = "01yubin",

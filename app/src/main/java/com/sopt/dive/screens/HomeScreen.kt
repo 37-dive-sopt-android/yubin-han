@@ -47,7 +47,7 @@ val dummyFeeds = listOf(
 fun HomeScreen(userNickname: String) {
     val userProfile = ProfileSummary(
         nickname = userNickname,
-        statusMessage ="하이루방가",
+        statusMessage = "하이루방가",
         profileImageResId = R.drawable.yangpa
     )
 
@@ -55,32 +55,39 @@ fun HomeScreen(userNickname: String) {
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp),
-        contentPadding=PaddingValues(top = 16.dp, bottom = 80.dp) // BottomBar 공간 확보
+        contentPadding = PaddingValues(top = 16.dp, bottom = 80.dp),
+        verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {
 
         //사용자 프로필 헤더
         item {
-            ProfileHeaderComponent(profile =userProfile)
+            ProfileHeaderComponent(profile = userProfile)
             Spacer(modifier = Modifier.height(30.dp))
         }
 
 
         //피드목록 피드아이템 리스트를 기반으로 아이템 반복 생성하는 코드
 
-        items(dummyFeeds.size) { index ->
-            // 더미 데이터가 부족하여 반복적으로 표시
-            val feed = dummyFeeds[index % dummyFeeds.size]
-            FeedItemCard(feed=feed)
-            Spacer(modifier = Modifier.height(10.dp))
+        items(
+            dummyFeeds.size,
+            key = { index ->
+                dummyFeeds[index].content
+            }
+
+        ) { index ->
+            val feed = dummyFeeds[index]
+            FeedItemCard(feed = feed)
         }
     }
 }
 
 
-
 // Home 화면 상단 프로필 요약
 @Composable
-fun ProfileHeaderComponent(profile: ProfileSummary) {
+fun ProfileHeaderComponent(
+    profile: ProfileSummary,
+    modifier: Modifier = Modifier
+) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Image(
             painter = painterResource(id = profile.profileImageResId),
@@ -93,20 +100,9 @@ fun ProfileHeaderComponent(profile: ProfileSummary) {
         Spacer(modifier = Modifier.width(16.dp))
         Column {
             Text(text = profile.nickname, fontSize = 25.sp, fontWeight = FontWeight.Bold)
-            Text(text = profile.statusMessage, fontSize = 16.sp, color = Color.Black
+            Text(
+                text = profile.statusMessage, fontSize = 16.sp, color = Color.Black
             )
-        }
-    }
-}
-
-@Composable
-fun StatCard(text: String) {
-    Card(
-        modifier = Modifier.padding(4.dp).fillMaxHeight(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF0F0F0))
-    ) {
-        Box(modifier = Modifier.fillMaxSize().padding(8.dp), contentAlignment = Alignment.Center) {
-            Text(text = text, fontSize = 14.sp)
         }
     }
 }
@@ -140,8 +136,8 @@ fun FeedItemCard(feed: FeedItem) {
 
 @Preview(showBackground = true)
 @Composable
-fun HomeScreentPreview() {
+private fun HomeScreenPreview() {
     DiveTheme {
-        HomeScreen(userNickname ="유콩이야이야")
+        HomeScreen(userNickname = "유콩이야이야")
     }
 }

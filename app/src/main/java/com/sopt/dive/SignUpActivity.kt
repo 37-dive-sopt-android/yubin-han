@@ -332,7 +332,7 @@ private fun SignUpScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun Week1assignmentPreview2() {
+fun signupPreview() {
     DiveTheme {
         signup(
             paddingValues = PaddingValues(),

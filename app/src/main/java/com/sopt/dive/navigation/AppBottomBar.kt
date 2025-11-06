@@ -17,7 +17,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.sopt.dive.Week1assignment
+import com.sopt.dive.signup
 import com.sopt.dive.ui.theme.DiveTheme
 
 
@@ -25,7 +25,7 @@ import com.sopt.dive.ui.theme.DiveTheme
 fun AppBottomBar(navController: NavHostController) {
     val screens = listOf(
         Screen.Home,
-        Screen.Search,
+        Screen.Animation,
         Screen.My
     )
 
@@ -36,7 +36,7 @@ fun AppBottomBar(navController: NavHostController) {
         screens.forEach { screen ->
             val icon = when (screen) {
                 Screen.Home -> Icons.Filled.Home
-                Screen.Search -> Icons.Filled.Search
+                Screen.Animation -> Icons.Filled.Search
                 Screen.My -> Icons.Filled.Person
             }
 
@@ -61,7 +61,7 @@ fun AppBottomBar(navController: NavHostController) {
 
 @Preview
 @Composable
-fun AppBottomBarPreview() {
+private fun AppBottomBarPreview() {
     val navController = rememberNavController()
     AppBottomBar(navController = navController)
 }

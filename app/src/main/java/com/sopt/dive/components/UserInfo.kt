@@ -33,10 +33,10 @@ import com.sopt.dive.data.ProfileSummary
 
 @Composable
 
-fun ProfileInfoItemComponent(
-    modifier: Modifier = Modifier,
+fun UserInfoComponent(
     title: String,
     value: String,
+    placeholder: String
 ) {
     Text(
         text = title,
@@ -45,10 +45,23 @@ fun ProfileInfoItemComponent(
         fontWeight = FontWeight.Bold,
         textAlign = TextAlign.Start
     )
-    Text(
-        text= value,
-        color = Color.Black,
-        modifier = Modifier.fillMaxWidth()
+    TextField(
+        value = value,
+        onValueChange = { },
+        readOnly = true,
+        placeholder = {
+            Text(
+                text = placeholder,
+                color = Color.LightGray
+            )
+        },
+        modifier = Modifier.fillMaxWidth(),
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            disabledContainerColor = Color.Transparent,
+            errorContainerColor = Color.Transparent
+        )
     )
     Spacer(modifier = Modifier.height(50.dp))
 }

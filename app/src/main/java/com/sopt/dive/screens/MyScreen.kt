@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -29,18 +30,18 @@ import com.sopt.dive.ui.theme.DiveTheme
 
 @Composable
 fun Myscreen(
-    userId:String,
-    userPw:String,
-    userNickname:String,
-    userHobby:String
-){
-    Column (
+    userId: String,
+    userPw: String,
+    userNickname: String,
+    userHobby: String
+) {
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
             .background(Color.White)
-    ){
+    ) {
         Spacer(modifier = Modifier.height(25.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -48,9 +49,7 @@ fun Myscreen(
             Image(
                 painter = painterResource(id = R.drawable.yangpa), // R.drawable.yangpa는 실제 리소스 ID로 대체 필요
                 contentDescription = "프로필사진",
-                modifier = Modifier
-                    .width(50.dp)
-                    .height(50.dp)
+                modifier = Modifier.size(50.dp)
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(
@@ -65,32 +64,28 @@ fun Myscreen(
             text = "안녕하세요! 한유빈입니다.",
             color = Color.Black,
             fontSize = 20.sp,
-        )
+
+            )
         Spacer(modifier = Modifier.height(50.dp))
 
         ProfileInfoItemComponent(
             title = "ID",
-            value = userId,
-            placeholder = "유콩이라고하오"
-
+            value = userId
         )
 
         ProfileInfoItemComponent(
             title = "PW",
-            value = userPw,
-            placeholder = "********"
+            value = userPw
         )
 
         ProfileInfoItemComponent(
             title = "NICKNAME",
-            value = userNickname,
-            placeholder = "나는야유콩이지"
+            value = userNickname
         )
 
         ProfileInfoItemComponent(
             title = "HOBBY",
-            value = userHobby,
-            placeholder = "운동"
+            value = userHobby
         )
     }
 }
@@ -98,12 +93,13 @@ fun Myscreen(
 
 @Preview
 @Composable
-fun MyScreenPreview() {
-        DiveTheme {
-            Myscreen(
-                userId = "01yubin",
-                userPw = "123456789",
-                userNickname = "유콩이야이야",
-                userHobby = "운동")
-        }
+private fun MyScreenPreview() {
+    DiveTheme {
+        Myscreen(
+            userId = "01yubin",
+            userPw = "123456789",
+            userNickname = "유콩이야이야",
+            userHobby = "운동"
+        )
+    }
 }

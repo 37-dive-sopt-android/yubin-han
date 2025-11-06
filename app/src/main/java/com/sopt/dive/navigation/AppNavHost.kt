@@ -1,4 +1,5 @@
 package com.sopt.dive.navigation
+
 import android.app.admin.TargetUser
 import android.hardware.biometrics.BiometricManager
 import android.provider.ContactsContract
@@ -13,47 +14,48 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.sopt.dive.MainScreen
+import com.sopt.dive.screens.AnimationScreen
 import com.sopt.dive.screens.HomeScreen
 import com.sopt.dive.screens.Myscreen
-import com.sopt.dive.screens.SearchScreen
 import com.sopt.dive.ui.theme.DiveTheme
 
 //화면 경로
 sealed class Screen(val route: String) {
     data object Home : Screen("home")
-    data object Search : Screen("search")
+    data object Animation : Screen("animation")
     data object My : Screen("my")
 }
+
 @Composable
 fun AppNavHost(
     navController: NavHostController,
     paddingValues: PaddingValues,
     userId: String,
-    userPw:String,
+    userPw: String,
     userNickname: String,
     userHobby: String
-){
+) {
     NavHost(
-        navController=navController,
+        navController = navController,
         startDestination = Screen.Home.route,
         modifier = Modifier.padding((paddingValues))
-    ){
+    ) {
         //홈
-        composable(Screen.Home.route){
-            HomeScreen(userNickname=userNickname)
+        composable(Screen.Home.route) {
+            HomeScreen(userNickname = userNickname)
         }
-        //서치
-        composable(Screen.Search.route)
+        //애니메이션
+        composable(Screen.Animation.route)
         {
-            SearchScreen()
+            AnimationScreen()
         }
         //마이
-        composable(Screen.My.route){
+        composable(Screen.My.route) {
             Myscreen(
-                userId=userId,
-                userPw=userPw,
-                userNickname=userNickname,
-                userHobby=userHobby
+                userId = userId,
+                userPw = userPw,
+                userNickname = userNickname,
+                userHobby = userHobby
             )
 
         }
@@ -62,17 +64,3 @@ fun AppNavHost(
 
 
 
-@Preview(showBackground = true)
-@Composable
-fun AppNavHostPreview() {
-    DiveTheme {
-        AppNavHost(
-            rememberNavController(),
-            paddingValues=PaddingValues(),
-            userId = "01yubin",
-            userPw = "123456789",
-            userNickname = "유콩이야이야",
-            userHobby = "운동"
-        )
-    }
-}

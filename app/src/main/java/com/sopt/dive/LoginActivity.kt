@@ -78,10 +78,10 @@ class LoginActivity : ComponentActivity() {
             val data: Intent? = result.data // SignUpActivity에서 보낸 Intent
 
 
-            val userID = data?.getStringExtra("ID")!!
-            val userPW = data?.getStringExtra("PW")!!
-            val userNICKNAME = data?.getStringExtra("NICKNAME")!!
-            val userHOBBY = data?.getStringExtra("HOBBY")!!
+            val userID = data?.getStringExtra("ID").orEmpty()
+            val userPW = data?.getStringExtra("PW").orEmpty()
+            val userNICKNAME = data?.getStringExtra("NICKNAME").orEmpty()
+            val userHOBBY = data?.getStringExtra("HOBBY").orEmpty()
 
             updateSavedCredentials(userID,userPW,userNICKNAME,userHOBBY)
 
@@ -112,7 +112,7 @@ class LoginActivity : ComponentActivity() {
 
             DiveTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Week1assignment(
+                    Login(
                         paddingValues = innerPadding,
                         activity = this
                     )
@@ -125,7 +125,7 @@ class LoginActivity : ComponentActivity() {
 
 
 @Composable
-fun Week1assignment(
+fun Login(
     paddingValues: PaddingValues,
     activity: LoginActivity? = null
 ) {
@@ -297,9 +297,9 @@ fun Week1assignment(
 
 @Preview(showBackground = true)
 @Composable
-private fun Week1assignmentPreview() {
+private fun LoginPreview() {
     DiveTheme {
-        Week1assignment(
+        Login(
             paddingValues = PaddingValues()
         )
     }

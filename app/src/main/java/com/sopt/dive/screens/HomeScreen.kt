@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.OutlinedTextFieldDefaults.contentPadding
 import androidx.compose.material3.Text
 import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
@@ -25,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sopt.dive.R
-import com.sopt.dive.components.ProfileInfoItemComponent
+import com.sopt.dive.components.ProfileHeaderComponent
 import com.sopt.dive.data.FeedItem
 import com.sopt.dive.data.ProfileSummary
 import com.sopt.dive.ui.theme.DiveTheme
@@ -44,7 +45,9 @@ val dummyFeeds = listOf(
 )
 
 @Composable
-fun HomeScreen(userNickname: String) {
+fun HomeScreen(
+    userNickname: String, contentPadding: PaddingValues
+) {
     val userProfile = ProfileSummary(
         nickname = userNickname,
         statusMessage = "하이루방가",
@@ -55,7 +58,7 @@ fun HomeScreen(userNickname: String) {
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp),
-        contentPadding = PaddingValues(top = 16.dp, bottom = 80.dp),
+        contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {
 
@@ -81,31 +84,6 @@ fun HomeScreen(userNickname: String) {
     }
 }
 
-
-// Home 화면 상단 프로필 요약
-@Composable
-fun ProfileHeaderComponent(
-    profile: ProfileSummary,
-    modifier: Modifier = Modifier
-) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Image(
-            painter = painterResource(id = profile.profileImageResId),
-            contentDescription = "프로필 사진",
-            modifier = Modifier
-                .size(60.dp)
-                .clip(CircleShape)
-                .background(Color.Gray) // 이미지 없으면 회색 배경
-        )
-        Spacer(modifier = Modifier.width(16.dp))
-        Column {
-            Text(text = profile.nickname, fontSize = 25.sp, fontWeight = FontWeight.Bold)
-            Text(
-                text = profile.statusMessage, fontSize = 16.sp, color = Color.Black
-            )
-        }
-    }
-}
 
 @Composable
 fun FeedItemCard(feed: FeedItem) {
@@ -138,6 +116,6 @@ fun FeedItemCard(feed: FeedItem) {
 @Composable
 private fun HomeScreenPreview() {
     DiveTheme {
-        HomeScreen(userNickname = "유콩이야이야")
+        HomeScreen(userNickname = "유콩이야이야", contentPadding())
     }
 }

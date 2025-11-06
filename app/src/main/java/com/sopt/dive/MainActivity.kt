@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import com.sopt.dive.navigation.AppBottomBar
 import com.sopt.dive.navigation.AppNavHost
+import com.sopt.dive.screens.HomeScreen
 import com.sopt.dive.ui.theme.DiveTheme
 
 class MainActivity : ComponentActivity() {
@@ -41,32 +42,32 @@ class MainActivity : ComponentActivity() {
         val userId = intent.getStringExtra("ID") ?: "GUEST_ID"
         val userPw = intent.getStringExtra("PW") ?: "손님"
         val userNickname = intent.getStringExtra("NICKNAME") ?: "손님"
-        val userHobby= intent.getStringExtra("HOBBY") ?: "손님"
+        val userHobby = intent.getStringExtra("HOBBY") ?: "손님"
 
         setContent {
             DiveTheme {
-                MainScreen(userId,userPw,userNickname,userHobby)
-                }
+                MainScreen(userId, userPw, userNickname, userHobby)
             }
         }
     }
+}
 
 @Composable
-fun MainScreen(userId: String,userPw: String,userNickname: String,userHobby: String){
-    val navController=rememberNavController()
-    Scaffold (
+fun MainScreen(userId: String, userPw: String, userNickname: String, userHobby: String) {
+    val navController = rememberNavController()
+    Scaffold(
         modifier = Modifier.fillMaxSize(),
-        bottomBar = { AppBottomBar(navController=navController) }
-    ){
-        paddingValues ->
+        bottomBar = { AppBottomBar(navController = navController) }
+    ) { innerPadding ->
         AppNavHost(
-            navController=navController,
-            paddingValues=paddingValues,
-            userId=userId,
-            userPw=userPw,
-            userNickname=userNickname,
-            userHobby=userHobby
-         )
+            navController = navController,
+            paddingValues = innerPadding,
+            userId = userId,
+            userPw = userPw,
+            userNickname = userNickname,
+            userHobby = userHobby
+        )
+
     }
 
 }

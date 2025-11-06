@@ -1,31 +1,26 @@
 package com.sopt.dive.navigation
 
-import android.app.admin.TargetUser
-import android.hardware.biometrics.BiometricManager
-import android.provider.ContactsContract
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.sopt.dive.MainScreen
+import com.sopt.dive.MainScreen // MainScreen이 사용되지 않으면 삭제 가능
 import com.sopt.dive.screens.AnimationScreen
 import com.sopt.dive.screens.HomeScreen
 import com.sopt.dive.screens.Myscreen
-import com.sopt.dive.ui.theme.DiveTheme
+import com.sopt.dive.data.BottomNavItem
 
 //화면 경로
+
 sealed class Screen(val route: String) {
     data object Home : Screen("home")
-    data object Animation : Screen("animation")
+    data object Animation : Screen("Animation")
     data object My : Screen("my")
 }
-
 @Composable
 fun AppNavHost(
     navController: NavHostController,
@@ -42,7 +37,9 @@ fun AppNavHost(
     ) {
         //홈
         composable(Screen.Home.route) {
-            HomeScreen(userNickname = userNickname)
+            HomeScreen(
+                userNickname = userNickname, contentPadding = paddingValues
+            )
         }
         //애니메이션
         composable(Screen.Animation.route)

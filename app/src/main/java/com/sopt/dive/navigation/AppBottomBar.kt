@@ -17,35 +17,28 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.sopt.dive.data.BottomNavItem
 import com.sopt.dive.signup
 import com.sopt.dive.ui.theme.DiveTheme
 
 
 @Composable
 fun AppBottomBar(navController: NavHostController) {
-    val screens = listOf(
-        Screen.Home,
-        Screen.Animation,
-        Screen.My
-    )
+    val screens = BottomNavItem.getItems()
 
     NavigationBar {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRout = navBackStackEntry?.destination?.route
 
-        screens.forEach { screen ->
-            val icon = when (screen) {
-                Screen.Home -> Icons.Filled.Home
-                Screen.Animation -> Icons.Filled.Search
-                Screen.My -> Icons.Filled.Person
-            }
+        screens.forEach { item->
+            val isSelected=currentRout==item.screen.route
 
             NavigationBarItem(
-                icon = { Icon(icon, contentDescription = null) },
-                label = { Text(screen.route.replaceFirstChar { it.uppercase() }) }, // Home, Search, My
-                selected = currentRout == screen.route,
+                icon = { Icon(item.icon, contentDescription = item.label) },
+                label = { Text(item.label) },
+                selected = isSelected, // Home, Search, My
                 onClick = {
-                    navController.navigate(screen.route) {
+                    navController.navigate(item.screen.route) {
                         // 탭 선택 시 백 스택을 관리하는 표준 로직 (시작 지점 유지)
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true

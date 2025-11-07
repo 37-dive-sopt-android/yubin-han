@@ -46,7 +46,7 @@ fun ProfileInfoItemComponent(
         textAlign = TextAlign.Start
     )
     Text(
-        text= value,
+        text = value,
         color = Color.Black,
         modifier = Modifier.fillMaxWidth()
     )

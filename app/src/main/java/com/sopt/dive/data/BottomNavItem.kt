@@ -8,8 +8,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.sopt.dive.navigation.Screen
 
 
-
-
 enum class BottomNavItem(
     val screen: Screen,          // 연결된 화면 객체
     val label: String,           // 표시할 텍스트
@@ -17,17 +15,17 @@ enum class BottomNavItem(
 ) {
     Home(
         screen = Screen.Home,
-        label = "홈",
+        label = "Home",
         icon = Icons.Filled.Home
     ),
     Animation(
         screen = Screen.Animation,
-        label = "애니메이션",
+        label = "Animation",
         icon = Icons.Filled.Star
     ),
     My(
         screen = Screen.My,
-        label = "마이",
+        label = "My",
         icon = Icons.Filled.Person
     );
 

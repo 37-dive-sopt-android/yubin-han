@@ -67,7 +67,6 @@ fun MainScreen(userId: String, userPw: String, userNickname: String, userHobby: 
             userNickname = userNickname,
             userHobby = userHobby
         )
-
     }
 
 }

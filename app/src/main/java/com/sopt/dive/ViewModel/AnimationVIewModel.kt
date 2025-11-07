@@ -1,4 +1,5 @@
 package com.sopt.dive.ViewModel
+
 import androidx.lifecycle.ViewModel
 import com.sopt.dive.data.CardState
 import com.sopt.dive.data.RotationAxis

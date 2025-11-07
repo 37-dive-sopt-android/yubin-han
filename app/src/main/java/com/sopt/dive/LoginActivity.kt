@@ -27,7 +27,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -62,12 +61,11 @@ class LoginActivity : ComponentActivity() {
     // 상태를 업데이트하는 함수 (콜백으로 전달될 함수)
     val updateSavedCredentials: (id: String, pw: String, nickname: String, hobby: String) -> Unit =
         { id, pw, nickname, hobby ->
-            savedId= id
+            savedId = id
             savedPw = pw
-            savedNickname =nickname
-            savedHobby=hobby
+            savedNickname = nickname
+            savedHobby = hobby
         }
-
 
 
     val signup = registerForActivityResult(
@@ -83,7 +81,7 @@ class LoginActivity : ComponentActivity() {
             val userNICKNAME = data?.getStringExtra("NICKNAME").orEmpty()
             val userHOBBY = data?.getStringExtra("HOBBY").orEmpty()
 
-            updateSavedCredentials(userID,userPW,userNICKNAME,userHOBBY)
+            updateSavedCredentials(userID, userPW, userNICKNAME, userHOBBY)
 
 
         }
@@ -112,9 +110,41 @@ class LoginActivity : ComponentActivity() {
 
             DiveTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Login(
+                    LoginContainer(
                         paddingValues = innerPadding,
-                        activity = this
+                        savedId = savedId,
+                        savedPw = savedPw,
+                        savedNickname = savedNickname,
+                        savedHobby = savedHobby,
+
+                        onLoginAttempt = { id, pw ->
+                            if (id == savedId && id.isNotBlank() && pw == savedPw && pw.isNotBlank()) {
+                                Toast.makeText(
+                                    this@LoginActivity,
+                                    "로그인에 성공했습니다.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                navigateToMain(
+                                    this@LoginActivity,
+                                    id,
+                                    pw,
+                                    savedNickname,
+                                    savedHobby
+                                )
+                            } else {
+                                Toast.makeText(
+                                    this@LoginActivity,
+                                    "로그인에 실패했습니다.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        },
+                        onSignupClick = {
+                            val intent = Intent(this, SignUpActivity::class.java)
+                            signup.launch(intent)
+                        }
+
+
                     )
 
                 }
@@ -123,19 +153,44 @@ class LoginActivity : ComponentActivity() {
     }
 }
 
-
 @Composable
-fun Login(
+fun LoginContainer(
     paddingValues: PaddingValues,
-    activity: LoginActivity? = null
-) {
+    savedId: String,
+    savedPw: String,
+    savedNickname: String,
+    savedHobby: String,
+    onLoginAttempt: (id: String, pw: String) -> Unit,
+    onSignupClick: () -> Unit
 
+) {
     //로그인 창 입력 상태
     var idText by remember { mutableStateOf("") }
     var pwText by remember { mutableStateOf("") }
 
+    Login(
+        paddingValues = paddingValues,
+        idText = idText,
+        onIdChange = { idText = it },
+        pwText = pwText,
+        onPwChange = { pwText = it },
+        onLoginClick = { onLoginAttempt(idText, pwText) },
+        onSignupClick = onSignupClick
+    )
 
-    val context = LocalContext.current
+}
+
+@Composable
+fun Login(
+    paddingValues: PaddingValues,
+    idText: String,
+    onIdChange: (String) -> Unit,
+    pwText: String,
+    onPwChange: (String) -> Unit,
+    onLoginClick: () -> Unit,
+    onSignupClick: () -> Unit
+) {
+
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -168,8 +223,8 @@ fun Login(
 
         TextField(
             value = idText,
-            onValueChange = { value ->
-                idText = value
+            onValueChange = {
+                onIdChange
             },
             placeholder = {
                 Text(
@@ -204,7 +259,7 @@ fun Login(
 
         TextField(
             value = pwText,
-            onValueChange = { value -> pwText = value },
+            onValueChange = onPwChange,
             placeholder = {
                 Text(
                     text = "비밀번호를 입력해주세요", color = Color.LightGray
@@ -238,32 +293,7 @@ fun Login(
 
 
         Button(
-            onClick = {
-                //성공 조건 추가
-                if ((idText ==  activity?.savedId&&idText.isNotBlank() )&& (pwText == activity.savedPw && pwText.isNotBlank()) )
-                {
-
-                    Toast.makeText(
-                        context,
-                        "로그인에 성공했습니다.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    activity?.navigateToMain(
-                        context,
-                        activity.savedId,
-                        activity.savedPw,
-                        activity.savedNickname,
-                        activity.savedHobby
-                    )
-                } else {
-                    Toast.makeText(
-                        context,
-                        "회원가입 정보가 없습니다.",
-                        Toast.LENGTH_SHORT,
-
-                        ).show()
-                }
-            },
+            onClick = onLoginClick,
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Blue,
                 contentColor = Color.White
@@ -284,11 +314,7 @@ fun Login(
             textDecoration = TextDecoration.Underline,
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable {
-                    val intent = Intent(context, SignUpActivity::class.java)
-
-                    activity?.signup?.launch(intent)
-                },
+                .clickable(onClick = onSignupClick),
             textAlign = TextAlign.Center
 
         )
@@ -300,7 +326,14 @@ fun Login(
 private fun LoginPreview() {
     DiveTheme {
         Login(
-            paddingValues = PaddingValues()
+            paddingValues = PaddingValues(),
+            idText = "test_id",
+            onIdChange = {},
+            pwText = "test_pw",
+            onPwChange = {},
+            onLoginClick = {},
+            onSignupClick = {}
         )
+
     }
 }

@@ -16,10 +16,10 @@ import com.sopt.dive.data.BottomNavItem
 
 //화면 경로
 
-sealed class Screen(val route: String) {
-    data object Home : Screen("home")
-    data object Animation : Screen("Animation")
-    data object My : Screen("my")
+enum class Screen(val route: String) {
+    Home ("home"),
+    Animation ("Animation"),
+    My ("my")
 }
 @Composable
 fun AppNavHost(

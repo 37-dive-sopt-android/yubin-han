@@ -224,7 +224,7 @@ fun Login(
         TextField(
             value = idText,
             onValueChange = {
-                onIdChange
+                onIdChange(it)
             },
             placeholder = {
                 Text(

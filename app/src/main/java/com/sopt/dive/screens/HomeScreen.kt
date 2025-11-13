@@ -29,20 +29,11 @@ import com.sopt.dive.R
 import com.sopt.dive.components.ProfileHeaderComponent
 import com.sopt.dive.data.FeedItem
 import com.sopt.dive.data.ProfileSummary
+import com.sopt.dive.data.dummyFeeds
 import com.sopt.dive.ui.theme.DiveTheme
 
 
-//더미
-val dummyFeeds = listOf(
-    FeedItem("한유빈", "집가고 싶다", R.drawable.yangpa),
-    FeedItem("유콩", "하루종일 놀고싶다", R.drawable.yangpa),
-    FeedItem("쿵야", "붕어빵 먹고싶다", R.drawable.yangpa),
-    FeedItem("영수", "고독정식 먹기 싫어", R.drawable.yangpa),
-    FeedItem("옥순", "나랑 데이트할래?", R.drawable.yangpa),
-    FeedItem("정숙", "나 헷갈리게 하지마", R.drawable.yangpa),
-    FeedItem("상철", "맛있는거 먹으러가자", R.drawable.yangpa)
 
-)
 
 @Composable
 fun HomeScreen(
@@ -74,7 +65,7 @@ fun HomeScreen(
         items(
             dummyFeeds.size,
             key = { index ->
-                dummyFeeds[index].content
+                dummyFeeds[index].userNickname
             }
 
         ) { index ->
@@ -86,7 +77,7 @@ fun HomeScreen(
 
 
 @Composable
-fun FeedItemCard(feed: FeedItem) {
+fun FeedItemCard(feed: FeedItem,modifier: Modifier=Modifier) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFF0F0F0)) // 배경색 변경
@@ -104,8 +95,16 @@ fun FeedItemCard(feed: FeedItem) {
             )
             Spacer(modifier = Modifier.width(8.dp))
             Column {
-                Text(text = feed.userNickname, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                Text(text = feed.content, fontSize = 14.sp, color = Color.DarkGray)
+                Text(
+                    text = feed.userNickname,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
+                Text(
+                    text = feed.content,
+                    fontSize = 14.sp,
+                    color = Color.DarkGray
+                )
             }
         }
     }

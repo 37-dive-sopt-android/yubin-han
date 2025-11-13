@@ -57,7 +57,11 @@ fun MainScreen(userId: String, userPw: String, userNickname: String, userHobby: 
     val navController = rememberNavController()
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        bottomBar = { AppBottomBar(navController = navController) }
+        bottomBar = {
+            AppBottomBar(
+                navController = navController
+            )
+        }
     ) { innerPadding ->
         AppNavHost(
             navController = navController,

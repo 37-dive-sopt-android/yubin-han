@@ -11,12 +11,18 @@ import com.sopt.dive.screens.AnimationScreen
 import com.sopt.dive.screens.HomeScreen
 import com.sopt.dive.screens.Myscreen
 
+interface MainTabRoute : Route
+interface Route
+
 //화면 경로
 
 enum class Screen(val route: String) {
     Home("home"),
     Animation("Animation"),
-    My("my")
+    My("my"),
+
+    SingUp("singup"),
+    Login("login")
 }
 
 @Composable
@@ -38,7 +44,7 @@ fun AppNavHost(
         composable(
             Screen.Home.route
         ) {
-            HomeScreen(userNickname=userNickname, contentPadding = paddingValues)
+            HomeScreen(userNickname = userNickname, contentPadding = paddingValues)
 
         }
         //애니메이션

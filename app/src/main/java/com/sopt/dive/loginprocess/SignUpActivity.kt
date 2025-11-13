@@ -1,14 +1,11 @@
-package com.sopt.dive.LoginProcess
+package com.sopt.dive.loginprocess
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -34,116 +31,45 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sopt.dive.MainActivity
 import com.sopt.dive.ui.theme.DiveTheme
 
-
-class LoginActivity : ComponentActivity() {
-
-    //회원가입에서 받아온 상태
-    var savedId by mutableStateOf<String>("")
-    var savedPw by mutableStateOf<String>("")
-    var savedNickname by mutableStateOf<String>("")
-    var savedHobby by mutableStateOf<String>("")
-
-    // 상태를 업데이트하는 함수 (콜백으로 전달될 함수)
-    val updateSavedCredentials: (id: String, pw: String, nickname: String, hobby: String) -> Unit =
-        { id, pw, nickname, hobby ->
-            savedId = id
-            savedPw = pw
-            savedNickname = nickname
-            savedHobby = hobby
-        }
-
-
-    val signup = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == RESULT_OK) {
-            //회원가입 성공
-            val data: Intent? = result.data // SignUpActivity에서 보낸 Intent
-
-
-            val userID = data?.getStringExtra("ID").orEmpty()
-            val userPW = data?.getStringExtra("PW").orEmpty()
-            val userNICKNAME = data?.getStringExtra("NICKNAME").orEmpty()
-            val userHOBBY = data?.getStringExtra("HOBBY").orEmpty()
-
-            updateSavedCredentials(userID, userPW, userNICKNAME, userHOBBY)
-
-
-        }
-
-    }
-
-    fun navigateToMain(
-        context: Context,
-        id: String, pw: String, nickname: String, hobby: String
-    ) {
-        val intent = Intent(context, MainActivity::class.java).apply {
-            putExtra("ID", id)
-            putExtra("PW", pw)
-            putExtra("NICKNAME", nickname)
-            putExtra("HOBBY", hobby)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        startActivity(intent)
-    }
-
-
+class SignUpActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-
             DiveTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    LoginContainer(
+                    Signup(
                         paddingValues = innerPadding,
-                        savedId = savedId,
-                        savedPw = savedPw,
-                        savedNickname = savedNickname,
-                        savedHobby = savedHobby,
-
-                        onLoginAttempt = { id, pw ->
-                            if (id == savedId && id.isNotBlank() && pw == savedPw && pw.isNotBlank()) {
-                                Toast.makeText(
-                                    this@LoginActivity,
-                                    "로그인에 성공했습니다.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                navigateToMain(
-                                    this@LoginActivity,
-                                    id,
-                                    pw,
-                                    savedNickname,
-                                    savedHobby
-                                )
-                            } else {
-                                Toast.makeText(
-                                    this@LoginActivity,
-                                    "로그인에 실패했습니다.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                        onSignUpClick = { idText, pwText, nicknameText, hobbyText ->
+                            val intent = Intent(
+                                this,
+                                LoginActivity::class.java
+                            ).apply {
+                                putExtra("ID", idText)
+                                putExtra("PW", pwText)
+                                putExtra("NICKNAME", nicknameText)
+                                putExtra("HOBBY", hobbyText)
                             }
-                        },
-                        onSignupClick = {
-                            val intent = Intent(this, SignUpActivity::class.java)
-                            signup.launch(intent)
+                            Toast.makeText(
+                                this,
+                                "회원가입 완료되었습니다.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            setResult(RESULT_OK, intent)
+                            finish()
+
                         }
-
-
                     )
 
                 }
@@ -152,62 +78,95 @@ class LoginActivity : ComponentActivity() {
     }
 }
 
+
 @Composable
-fun LoginContainer(
+fun Signup(
     paddingValues: PaddingValues,
-    savedId: String,
-    savedPw: String,
-    savedNickname: String,
-    savedHobby: String,
-    onLoginAttempt: (id: String, pw: String) -> Unit,
-    onSignupClick: () -> Unit
+    onSignUpClick: (String, String, String, String) -> Unit
 
 ) {
-    //로그인 창 입력 상태
     var idText by remember { mutableStateOf("") }
     var pwText by remember { mutableStateOf("") }
+    var nicknameText by remember { mutableStateOf("") }
+    var hobbyText by remember { mutableStateOf("") }
 
-    Login(
+
+    val context = LocalContext.current
+
+    // 검증 + 제출
+    fun validateAndSubmit() {
+        if (idText.isBlank() || pwText.isBlank() || nicknameText.isBlank() || hobbyText.isBlank()) {
+            Toast.makeText(context, "모든 정보를 입력해야 회원가입 가능합니다.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (idText.length !in 6..10) {
+            Toast.makeText(context, "아이디는 6~10글자로 설정해주세요.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (pwText.length !in 8..12) {
+            Toast.makeText(context, "비밀번호는 8~12글자로 설정해주세요.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (nicknameText.isBlank()) {
+            Toast.makeText(context, "닉네임은 한 글자 이상이어야 합니다.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        onSignUpClick(idText, pwText, nicknameText, hobbyText)
+    }
+
+
+    SignUpScreen(
         paddingValues = paddingValues,
         idText = idText,
-        onIdChange = { idText = it },
         pwText = pwText,
-        onPwChange = { pwText = it },
-        onLoginClick = { onLoginAttempt(idText, pwText) },
-        onSignupClick = onSignupClick
+        nicknameText = nicknameText,
+        hobbyText = hobbyText,
+        onIdChange = {
+            idText = it
+        },
+        onPwChange = {
+            pwText = it
+        },
+        onNicknameChange = {
+            nicknameText = it
+        },
+        onHobbyChange = {
+            hobbyText = it
+        },
+        onSignUpClick = { validateAndSubmit() }
     )
-
 }
 
 @Composable
-fun Login(
+private fun SignUpScreen(
     paddingValues: PaddingValues,
     idText: String,
-    onIdChange: (String) -> Unit,
     pwText: String,
+    nicknameText: String,
+    hobbyText: String,
+    onIdChange: (String) -> Unit,
     onPwChange: (String) -> Unit,
-    onLoginClick: () -> Unit,
-    onSignupClick: () -> Unit
+    onNicknameChange: (String) -> Unit,
+    onHobbyChange: (String) -> Unit,
+    onSignUpClick: () -> Unit
+
 ) {
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-
-
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(30.dp)
+            .padding(16.dp)
             .padding(paddingValues),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(25.dp))
 
         Text(
-            text = "Welcome To Sopt",
+            text = "SIGN UP",
             color = Color.Black,
-            fontSize = 38.sp,
+            fontSize = 30.sp,
             fontWeight = FontWeight.Bold
         )
 
@@ -222,9 +181,7 @@ fun Login(
 
         TextField(
             value = idText,
-            onValueChange = {
-                onIdChange(it)
-            },
+            onValueChange = onIdChange,
             placeholder = {
                 Text(
                     text = "아이디를 입력해주세요", color = Color.LightGray
@@ -265,11 +222,74 @@ fun Login(
                 )
             },
             singleLine = true,
-            visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done,
-                keyboardType = KeyboardType.Password
+                imeAction = ImeAction.Next
             ),
+            keyboardActions = KeyboardActions(
+                onNext = { focusManager.moveFocus(FocusDirection.Down) } // NICKNAME으로 포커스 이동
+            ),
+            modifier = Modifier
+                .fillMaxWidth(),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,    // 배경 투명
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                errorContainerColor = Color.Transparent
+            )
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+
+        Text(
+            text = "NICKNAME",
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Start,
+            fontSize = 38.sp
+        )
+        TextField(
+            value = nicknameText,
+            onValueChange = onNicknameChange,
+            placeholder = {
+                Text(
+                    text = "닉네임을 입력해주세요", color = Color.LightGray
+                )
+            },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = { focusManager.moveFocus(FocusDirection.Down) } // HOBBY로 포커스 이동
+            ),
+            modifier = Modifier
+                .fillMaxWidth(),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,    // 배경 투명
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                errorContainerColor = Color.Transparent
+            )
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = "HOBBY",
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Start,
+            fontSize = 38.sp
+
+        )
+        TextField(
+            value = hobbyText,
+            onValueChange = onHobbyChange,
+            placeholder = {
+                Text(
+                    text = "취미를 입력해주세요", color = Color.LightGray
+                )
+            },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(
                 onDone = {
                     keyboardController?.hide()
@@ -286,13 +306,16 @@ fun Login(
         )
 
 
-
         Spacer(modifier = Modifier.weight(1f))
+
+        fun noEmpty(): Boolean =
+            idText.isNotBlank() && pwText.isNotBlank() && nicknameText.isNotBlank() && hobbyText.isNotBlank()
 
 
 
         Button(
-            onClick = onLoginClick,
+            onClick = onSignUpClick,
+
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Blue,
                 contentColor = Color.White
@@ -302,37 +325,20 @@ fun Login(
             shape = RoundedCornerShape(16.dp)
         ) {
             Text(
-                text = "Welcome To SOPT"
+                text = "회원가입하기"
             )
         }
 
-
-
-        Text(
-            text = "회원가입하기",
-            textDecoration = TextDecoration.Underline,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(onClick = onSignupClick),
-            textAlign = TextAlign.Center
-
-        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun LoginPreview() {
+private fun SignupPreview() {
     DiveTheme {
-        Login(
+        Signup(
             paddingValues = PaddingValues(),
-            idText = "test_id",
-            onIdChange = {},
-            pwText = "test_pw",
-            onPwChange = {},
-            onLoginClick = {},
-            onSignupClick = {}
+            onSignUpClick = { _, _, _, _ -> } // Preview용 더미
         )
-
     }
 }

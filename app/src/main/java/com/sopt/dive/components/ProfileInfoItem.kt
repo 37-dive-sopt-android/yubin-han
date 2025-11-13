@@ -34,9 +34,10 @@ import com.sopt.dive.data.ProfileSummary
 @Composable
 
 fun ProfileInfoItemComponent(
-    modifier: Modifier = Modifier,
     title: String,
     value: String,
+    modifier: Modifier = Modifier,
+
 ) {
     Text(
         text = title,

@@ -39,10 +39,12 @@ fun Myscreen(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp)
             .background(Color.White)
+            .padding(16.dp)
+
     ) {
         Spacer(modifier = Modifier.height(25.dp))
+
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {

@@ -1,11 +1,7 @@
-package com.sopt.dive.LoginProcess
+package com.sopt.dive.screens
 
-import android.content.Intent
-import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -18,7 +14,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -36,54 +31,21 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sopt.dive.ui.theme.DiveTheme
-
-class SignUpActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            DiveTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    signup(
-                        paddingValues = innerPadding,
-                        onSignUpClick = { idText, pwText, nicknameText, hobbyText ->
-                            val intent = Intent(
-                                this,
-                                LoginActivity::class.java
-                            ).apply {
-                                putExtra("ID", idText)
-                                putExtra("PW", pwText)
-                                putExtra("NICKNAME", nicknameText)
-                                putExtra("HOBBY", hobbyText)
-                            }
-                            Toast.makeText(
-                                this,
-                                "회원가입 완료되었습니다.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            setResult(RESULT_OK, intent)
-                            finish()
-
-                        }
-                    )
-
-                }
-            }
-        }
-    }
-}
-
+import com.sopt.dive.viewmodel.AuthViewModel
 
 @Composable
-fun signup(
-    paddingValues: PaddingValues,
-    onSignUpClick: (String, String, String, String) -> Unit
-
+fun SignupScreen(
+    viewModel: AuthViewModel,
+    onNavigateToLogin: () -> Unit
 ) {
     var idText by remember { mutableStateOf("") }
     var pwText by remember { mutableStateOf("") }
@@ -111,35 +73,31 @@ fun signup(
             Toast.makeText(context, "닉네임은 한 글자 이상이어야 합니다.", Toast.LENGTH_SHORT).show()
             return
         }
-        onSignUpClick(idText, pwText, nicknameText, hobbyText)
+
+        // ViewModel에 저장 (로그인에 사용)
+        viewModel.saveCredentials(idText, pwText, nicknameText, hobbyText)
+        Toast.makeText(context, "회원가입 완료되었습니다. 로그인 화면으로 돌아갑니다.", Toast.LENGTH_SHORT).show()
+
+        // 로그인 화면으로 돌아가기
+        onNavigateToLogin()
     }
 
 
-    SignUpScreen(
-        paddingValues = paddingValues,
+    SignupUI(
         idText = idText,
         pwText = pwText,
         nicknameText = nicknameText,
         hobbyText = hobbyText,
-        onIdChange = {
-            idText = it
-        },
-        onPwChange = {
-            pwText = it
-        },
-        onNicknameChange = {
-            nicknameText = it
-        },
-        onHobbyChange = {
-            hobbyText = it
-        },
+        onIdChange = { idText = it },
+        onPwChange = { pwText = it },
+        onNicknameChange = { nicknameText = it },
+        onHobbyChange = { hobbyText = it },
         onSignUpClick = { validateAndSubmit() }
     )
 }
 
 @Composable
-private fun SignUpScreen(
-    paddingValues: PaddingValues,
+private fun SignupUI(
     idText: String,
     pwText: String,
     nicknameText: String,
@@ -149,7 +107,6 @@ private fun SignUpScreen(
     onNicknameChange: (String) -> Unit,
     onHobbyChange: (String) -> Unit,
     onSignUpClick: () -> Unit
-
 ) {
 
     val focusManager = LocalFocusManager.current
@@ -157,8 +114,7 @@ private fun SignUpScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
-            .padding(paddingValues),
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(25.dp))
@@ -172,6 +128,7 @@ private fun SignUpScreen(
 
         Spacer(modifier = Modifier.height(25.dp))
 
+        // ID
         Text(
             text = "ID",
             modifier = Modifier.fillMaxWidth(),
@@ -182,22 +139,13 @@ private fun SignUpScreen(
         TextField(
             value = idText,
             onValueChange = onIdChange,
-            placeholder = {
-                Text(
-                    text = "아이디를 입력해주세요", color = Color.LightGray
-                )
-            },
+            placeholder = { Text(text = "아이디를 입력해주세요 (6~10자)", color = Color.LightGray) },
             singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next
-            ),
-            keyboardActions = KeyboardActions(
-                onNext = { focusManager.moveFocus(FocusDirection.Down) } // PW로 포커스 이동
-            ),
-            modifier = Modifier
-                .fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
+            modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,    // 배경 투명
+                focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
                 disabledContainerColor = Color.Transparent,
                 errorContainerColor = Color.Transparent
@@ -206,6 +154,7 @@ private fun SignUpScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // PW
         Text(
             text = "PW",
             modifier = Modifier.fillMaxWidth(),
@@ -216,22 +165,17 @@ private fun SignUpScreen(
         TextField(
             value = pwText,
             onValueChange = onPwChange,
-            placeholder = {
-                Text(
-                    text = "비밀번호를 입력해주세요", color = Color.LightGray
-                )
-            },
+            placeholder = { Text(text = "비밀번호를 입력해주세요 (8~12자)", color = Color.LightGray) },
             singleLine = true,
+            visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Password
             ),
-            keyboardActions = KeyboardActions(
-                onNext = { focusManager.moveFocus(FocusDirection.Down) } // NICKNAME으로 포커스 이동
-            ),
-            modifier = Modifier
-                .fillMaxWidth(),
+            keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
+            modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,    // 배경 투명
+                focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
                 disabledContainerColor = Color.Transparent,
                 errorContainerColor = Color.Transparent
@@ -240,7 +184,7 @@ private fun SignUpScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-
+        // NICKNAME
         Text(
             text = "NICKNAME",
             modifier = Modifier.fillMaxWidth(),
@@ -250,22 +194,13 @@ private fun SignUpScreen(
         TextField(
             value = nicknameText,
             onValueChange = onNicknameChange,
-            placeholder = {
-                Text(
-                    text = "닉네임을 입력해주세요", color = Color.LightGray
-                )
-            },
+            placeholder = { Text(text = "닉네임을 입력해주세요", color = Color.LightGray) },
             singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next
-            ),
-            keyboardActions = KeyboardActions(
-                onNext = { focusManager.moveFocus(FocusDirection.Down) } // HOBBY로 포커스 이동
-            ),
-            modifier = Modifier
-                .fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
+            modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,    // 배경 투명
+                focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
                 disabledContainerColor = Color.Transparent,
                 errorContainerColor = Color.Transparent
@@ -273,6 +208,7 @@ private fun SignUpScreen(
         )
         Spacer(modifier = Modifier.height(16.dp))
 
+        // HOBBY
         Text(
             text = "HOBBY",
             modifier = Modifier.fillMaxWidth(),
@@ -283,22 +219,13 @@ private fun SignUpScreen(
         TextField(
             value = hobbyText,
             onValueChange = onHobbyChange,
-            placeholder = {
-                Text(
-                    text = "취미를 입력해주세요", color = Color.LightGray
-                )
-            },
+            placeholder = { Text(text = "취미를 입력해주세요", color = Color.LightGray) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    keyboardController?.hide()
-                }
-            ),
-            modifier = Modifier
-                .fillMaxWidth(),
+            keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
+            modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,    // 배경 투명
+                focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
                 disabledContainerColor = Color.Transparent,
                 errorContainerColor = Color.Transparent
@@ -308,25 +235,17 @@ private fun SignUpScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        fun noEmpty(): Boolean =
-            idText.isNotBlank() && pwText.isNotBlank() && nicknameText.isNotBlank() && hobbyText.isNotBlank()
-
-
 
         Button(
             onClick = onSignUpClick,
-
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Blue,
                 contentColor = Color.White
             ),
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp)
         ) {
-            Text(
-                text = "회원가입하기"
-            )
+            Text(text = "회원가입하기")
         }
 
     }
@@ -334,11 +253,18 @@ private fun SignUpScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun signupPreview() {
+private fun SignupPreview() {
     DiveTheme {
-        signup(
-            paddingValues = PaddingValues(),
-            onSignUpClick = { _, _, _, _ -> } // Preview용 더미
+        SignupUI(
+            idText = "",
+            pwText = "",
+            nicknameText = "",
+            hobbyText = "",
+            onIdChange = {},
+            onPwChange = {},
+            onHobbyChange = {},
+            onNicknameChange = {},
+            onSignUpClick = {}
         )
     }
 }

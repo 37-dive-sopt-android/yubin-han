@@ -5,11 +5,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import androidx.navigation.navOptions
 import com.sopt.dive.screens.AnimationScreen
 import com.sopt.dive.screens.HomeScreen
+import com.sopt.dive.screens.LoginScreen
 import com.sopt.dive.screens.Myscreen
+import com.sopt.dive.screens.SignupScreen
+import com.sopt.dive.viewmodel.AuthViewModel
 
 interface MainTabRoute : Route
 interface Route
@@ -21,8 +27,6 @@ enum class Screen(val route: String) {
     Animation("Animation"),
     My("my"),
 
-    SingUp("singup"),
-    Login("login")
 }
 
 @Composable

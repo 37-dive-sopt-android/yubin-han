@@ -33,7 +33,7 @@ class AuthViewModel : ViewModel() {
 
     // 로그인 시도 로직
     fun attemptLogin(id: String, pw: String): Boolean {
-        if (id == savedState.savedId.value && id.isNotBlank() && pw == savedState.savedId.value && pw.isNotBlank()) {
+        if (id == savedState.savedId.value && id.isNotBlank() && pw == savedState.savedPw.value && pw.isNotBlank()) {
             isLoggedIn = true // 로그인 성공
             return true
         }

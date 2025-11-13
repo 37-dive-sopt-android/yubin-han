@@ -65,7 +65,8 @@ fun LoginScreen(
                 savedState.savedHobby.value
             )
         } else {
-            Toast.makeText(context, "로그인에 실패했습니다. ID/PW를 확인하거나 회원가입을 하세요.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "로그인에 실패했습니다. ID/PW를 확인하거나 회원가입을 하세요.", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -125,8 +126,10 @@ private fun LoginContainerUI(
             keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent, unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent, errorContainerColor = Color.Transparent
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                errorContainerColor = Color.Transparent
             )
         )
 
@@ -145,12 +148,17 @@ private fun LoginContainerUI(
             placeholder = { Text(text = "비밀번호를 입력해주세요", color = Color.LightGray) },
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Password),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Password
+            ),
             keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent, unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent, errorContainerColor = Color.Transparent
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                errorContainerColor = Color.Transparent
             )
         )
 
@@ -160,7 +168,10 @@ private fun LoginContainerUI(
 
         Button(
             onClick = onLoginClick,
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Blue, contentColor = Color.White),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Blue,
+                contentColor = Color.White
+            ),
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp)
         ) {
@@ -178,6 +189,7 @@ private fun LoginContainerUI(
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun Longinpreview() {
@@ -185,9 +197,9 @@ private fun Longinpreview() {
         LoginContainerUI(
             idText = "",
             pwText = "",
-            onIdChange ={},
-            onPwChange ={},
-            onSignupClick ={},
+            onIdChange = {},
+            onPwChange = {},
+            onSignupClick = {},
             onLoginClick = {}
         )
     }

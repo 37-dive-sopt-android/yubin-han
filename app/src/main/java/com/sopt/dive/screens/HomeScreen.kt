@@ -33,8 +33,6 @@ import com.sopt.dive.data.dummyFeeds
 import com.sopt.dive.ui.theme.DiveTheme
 
 
-
-
 @Composable
 fun HomeScreen(
     userNickname: String, contentPadding: PaddingValues
@@ -77,7 +75,7 @@ fun HomeScreen(
 
 
 @Composable
-fun FeedItemCard(feed: FeedItem,modifier: Modifier=Modifier) {
+fun FeedItemCard(feed: FeedItem, modifier: Modifier = Modifier) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFF0F0F0)) // 배경색 변경

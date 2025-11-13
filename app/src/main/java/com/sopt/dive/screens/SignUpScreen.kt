@@ -39,7 +39,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.sopt.dive.loginprocess.Signup
 import com.sopt.dive.ui.theme.DiveTheme
 import com.sopt.dive.viewmodel.AuthViewModel
 
@@ -146,8 +145,10 @@ private fun SignupUI(
             keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent, unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent, errorContainerColor = Color.Transparent
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                errorContainerColor = Color.Transparent
             )
         )
 
@@ -167,12 +168,17 @@ private fun SignupUI(
             placeholder = { Text(text = "비밀번호를 입력해주세요 (8~12자)", color = Color.LightGray) },
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Password),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Password
+            ),
             keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent, unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent, errorContainerColor = Color.Transparent
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                errorContainerColor = Color.Transparent
             )
         )
 
@@ -197,7 +203,8 @@ private fun SignupUI(
                 focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
                 disabledContainerColor = Color.Transparent,
-                errorContainerColor = Color.Transparent)
+                errorContainerColor = Color.Transparent
+            )
         )
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -218,8 +225,10 @@ private fun SignupUI(
             keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent, unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent, errorContainerColor = Color.Transparent
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                errorContainerColor = Color.Transparent
             )
         )
 
@@ -229,7 +238,10 @@ private fun SignupUI(
 
         Button(
             onClick = onSignUpClick,
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Blue, contentColor = Color.White),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Blue,
+                contentColor = Color.White
+            ),
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp)
         ) {
@@ -246,13 +258,13 @@ private fun SignupPreview() {
         SignupUI(
             idText = "",
             pwText = "",
-            nicknameText ="" ,
+            nicknameText = "",
             hobbyText = "",
-            onIdChange ={},
-            onPwChange ={},
+            onIdChange = {},
+            onPwChange = {},
             onHobbyChange = {},
-            onNicknameChange ={},
-            onSignUpClick ={}
+            onNicknameChange = {},
+            onSignUpClick = {}
         )
     }
 }

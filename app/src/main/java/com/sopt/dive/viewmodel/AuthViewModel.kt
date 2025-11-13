@@ -13,7 +13,8 @@ data class AuthState(
     val savedNickname: MutableState<String> = mutableStateOf(""),
     val savedHobby: MutableState<String> = mutableStateOf("")
 
-    )
+)
+
 class AuthViewModel : ViewModel() {
     // 2. 로그인 상태 (Main Activity에서 네비게이션 결정에 사용)
     var savedState by mutableStateOf(AuthState())
@@ -24,10 +25,10 @@ class AuthViewModel : ViewModel() {
 
     // 회원가입 성공 시 호출될 함수 (데이터 저장)
     fun saveCredentials(id: String, pw: String, nickname: String, hobby: String) {
-        savedState.savedId.value=id
-        savedState.savedPw.value=pw
-        savedState.savedNickname.value=nickname
-        savedState.savedHobby.value=hobby
+        savedState.savedId.value = id
+        savedState.savedPw.value = pw
+        savedState.savedNickname.value = nickname
+        savedState.savedHobby.value = hobby
 
     }
 

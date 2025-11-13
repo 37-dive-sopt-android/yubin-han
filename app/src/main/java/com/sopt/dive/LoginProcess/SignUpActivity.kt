@@ -1,6 +1,5 @@
-package com.sopt.dive
+package com.sopt.dive.LoginProcess
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -37,8 +36,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -52,24 +49,27 @@ class SignUpActivity : ComponentActivity() {
         setContent {
             DiveTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Week1assignment2(
+                    signup(
                         paddingValues = innerPadding,
-                        onSignUpClick = { idText, pwText, nicknameText,hobbyText ->
-                            val intent=Intent(this,
-                                LoginActivity::class.java).apply{
-                                putExtra("ID",idText)
-                                putExtra("PW",pwText)
-                                putExtra("NICKNAME",nicknameText)
-                                putExtra("HOBBY",hobbyText)
+                        onSignUpClick = { idText, pwText, nicknameText, hobbyText ->
+                            val intent = Intent(
+                                this,
+                                LoginActivity::class.java
+                            ).apply {
+                                putExtra("ID", idText)
+                                putExtra("PW", pwText)
+                                putExtra("NICKNAME", nicknameText)
+                                putExtra("HOBBY", hobbyText)
                             }
-                            Toast.makeText(this,
+                            Toast.makeText(
+                                this,
                                 "회원가입 완료되었습니다.",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            setResult(RESULT_OK,intent)
+                            setResult(RESULT_OK, intent)
                             finish()
 
-                            }
+                        }
                     )
 
                 }
@@ -80,7 +80,7 @@ class SignUpActivity : ComponentActivity() {
 
 
 @Composable
-fun Week1assignment2(
+fun signup(
     paddingValues: PaddingValues,
     onSignUpClick: (String, String, String, String) -> Unit
 
@@ -92,6 +92,7 @@ fun Week1assignment2(
 
 
     val context = LocalContext.current
+
     // 검증 + 제출
     fun validateAndSubmit() {
         if (idText.isBlank() || pwText.isBlank() || nicknameText.isBlank() || hobbyText.isBlank()) {
@@ -135,8 +136,9 @@ fun Week1assignment2(
         onSignUpClick = { validateAndSubmit() }
     )
 }
+
 @Composable
-fun SignUpScreen(
+private fun SignUpScreen(
     paddingValues: PaddingValues,
     idText: String,
     pwText: String,
@@ -312,7 +314,8 @@ fun SignUpScreen(
 
 
         Button(
-            onClick = { onSignUpClick() },
+            onClick = onSignUpClick,
+
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Blue,
                 contentColor = Color.White
@@ -331,9 +334,9 @@ fun SignUpScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun Week1assignmentPreview2() {
+fun signupPreview() {
     DiveTheme {
-        Week1assignment2(
+        signup(
             paddingValues = PaddingValues(),
             onSignUpClick = { _, _, _, _ -> } // Preview용 더미
         )

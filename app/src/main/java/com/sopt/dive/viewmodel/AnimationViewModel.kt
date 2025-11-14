@@ -1,4 +1,4 @@
-package com.sopt.dive.ViewModel
+package com.sopt.dive.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.sopt.dive.data.CardState
@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class AnimationVIewModel : ViewModel() {
+class AnimationViewModel : ViewModel() {
 
     //현재 카드 뒤집힘 여부
-    private val _isFlipped = MutableStateFlow(CardState())
-    val isFlipped: StateFlow<CardState> = _isFlipped.asStateFlow()
+    private val _cardState = MutableStateFlow(CardState())
+    val cardState: StateFlow<CardState> = _cardState.asStateFlow()
 
 
     val cardFrontResId = com.sopt.dive.R.drawable.front
@@ -21,14 +21,14 @@ class AnimationVIewModel : ViewModel() {
 
     //앞뒤 카드 뒤집기
     fun flipCard() {
-        _isFlipped.update { currentState ->
+        _cardState.update { currentState ->
             currentState.copy(isFront = !currentState.isFront)
         }
     }
 
     //뒤집는 축 변경
     fun setRotationAxis(axis: RotationAxis) {
-        _isFlipped.update { currentState ->
+        _cardState.update { currentState ->
             currentState.copy(rotationAxis = axis)
         }
     }

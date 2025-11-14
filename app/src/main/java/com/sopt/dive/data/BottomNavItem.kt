@@ -30,6 +30,6 @@ enum class BottomNavItem(
     );
 
     companion object {
-        fun getItems(): List<BottomNavItem> = values().toList()
+        fun getItems(): List<BottomNavItem> = entries
     }
 }

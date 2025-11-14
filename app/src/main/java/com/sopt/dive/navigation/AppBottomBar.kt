@@ -20,10 +20,10 @@ fun AppBottomBar(navController: NavHostController) {
 
     NavigationBar {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRout = navBackStackEntry?.destination?.route
+        val currentRoute = navBackStackEntry?.destination?.route
 
         screens.forEach { item ->
-            val isSelected = currentRout == item.screen.route
+            val isSelected = currentRoute == item.screen.route
 
             NavigationBarItem(
                 icon = { Icon(item.icon, contentDescription = item.label) },

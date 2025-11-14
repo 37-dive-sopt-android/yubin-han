@@ -11,13 +11,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -31,14 +29,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.sopt.dive.ViewModel.AnimationVIewModel
+import com.sopt.dive.viewmodel.AnimationViewModel
 import com.sopt.dive.ui.theme.DiveTheme
 
 
 @Composable
-fun AnimationScreen(viewModel: AnimationVIewModel = viewModel()) {
+fun AnimationScreen(viewModel: AnimationViewModel = viewModel()) {
 
-    val isFlipped by viewModel.isFlipped.collectAsState()
+    val cardState by viewModel.cardState.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -48,7 +46,7 @@ fun AnimationScreen(viewModel: AnimationVIewModel = viewModel()) {
 
         // 카드 뒤집기 애니메이션 Composable
         CardFlipAnimation(
-            isFlipped = isFlipped.isFront,
+            isFlipped = cardState.isFront,
             frontResourceId = viewModel.cardFrontResId,
             backResourceId = viewModel.cardBacktResId,
             onCardClick = viewModel::flipCard // 카드 클릭 시 ViewModel 함수 호출
@@ -60,7 +58,7 @@ fun AnimationScreen(viewModel: AnimationVIewModel = viewModel()) {
         Button(
             onClick = viewModel::flipCard // 버튼 클릭 시 ViewModel 함수 호출
         ) {
-            Text(text = if (isFlipped.isFront) "앞면 보기" else "뒷면 보기")
+            Text(text = if (cardState.isFront) "앞면 보기" else "뒷면 보기")
         }
     }
 }
@@ -77,7 +75,7 @@ fun CardFlipAnimation(
     val rotation by animateFloatAsState(
         targetValue = if (isFlipped) 180f else 0f,
         animationSpec = tween(
-            durationMillis = 800, // 0.8초 동안 뒤집기 (너무 빠르지 않게)
+            durationMillis = 800,
             easing = FastOutSlowInEasing
         ), label = "CardRotation"
     )
@@ -90,7 +88,7 @@ fun CardFlipAnimation(
     Box(
         modifier = modifier
             .then(cardSize)
-            .clickable(onClick = onCardClick), // 카드 클릭 시 뒤집기 이벤트 발생
+            .clickable(onClick = onCardClick), // 카드 클릭 시 뒤집기
         contentAlignment = Alignment.Center
     ) {
         Card(
@@ -102,17 +100,12 @@ fun CardFlipAnimation(
                     cameraDistance = 8 * density // 3D 원근감 설정
                 }
         ) {
-            // isFrontVisible에 따라 Front 또는 Back을 렌더링
-            if (isFrontVisible) {
-                // 앞면 (회전 0도)
-                CardContent(resourceId = frontResourceId)
-            } else {
-                // 뒷면이 보일 때 올바른 방향으로 표시되도록 180도 추가 회전
-                CardContent(
-                    resourceId = backResourceId,
-                    modifier = Modifier.graphicsLayer { rotationY = 180f }
-                )
-            }
+            CardContent(
+                resourceId = if (isFrontVisible) frontResourceId else backResourceId,
+                modifier = Modifier.graphicsLayer {
+                    rotationY = if (isFrontVisible) 0f else 180f
+                }
+            )
         }
     }
 }

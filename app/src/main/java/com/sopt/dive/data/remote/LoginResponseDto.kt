@@ -8,5 +8,5 @@ data class LoginResponseDto(
     @SerialName("userId")
     val userId: Long,
     @SerialName("message")
-    val message: String,
+    val message: String
 )

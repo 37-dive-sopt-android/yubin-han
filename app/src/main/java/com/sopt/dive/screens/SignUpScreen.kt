@@ -136,8 +136,6 @@ fun SignupScreen(
             }
         )
     }
-//1. SignUpRequestDto 안의 내용을 실제 입력값으로 바꾸기
-//2. 나머지 필수과제 지금은 회원가입 하나 한거임 ;;;;; 로그인 정보와 회그 두개 어쩌고 불러오기
 
 
     @Composable

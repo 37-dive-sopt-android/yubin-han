@@ -36,7 +36,7 @@ import com.sopt.dive.screens.HomeScreen
 import com.sopt.dive.ui.theme.DiveTheme
 
 
-// 집가고싶엉ㅅ
+//
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

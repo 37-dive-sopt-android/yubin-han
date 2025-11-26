@@ -1,4 +1,4 @@
-package com.sopt.dive.data
+package com.sopt.dive.model
 
 import com.sopt.dive.R
 

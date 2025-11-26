@@ -2,7 +2,7 @@ package com.sopt.dive.data.remote
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.sopt.dive.BuildConfig
-import com.sopt.dive.data.service.UserService
+import com.sopt.dive.data.service.UserApiService
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -36,7 +36,7 @@ object ApiFactory {
 }
 
 object ServicePool {
-    val userService: UserService by lazy {
-        ApiFactory.create<UserService>()
+    val userService: UserApiService by lazy {
+        ApiFactory.create<UserApiService>()
     }
 }

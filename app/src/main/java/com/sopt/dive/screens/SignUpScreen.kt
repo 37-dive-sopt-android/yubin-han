@@ -43,8 +43,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sopt.dive.data.remote.ServicePool.userService
-import com.sopt.dive.data.remote.SignUpRequestDto
-import com.sopt.dive.data.remote.SignUpResponseDto
+import com.sopt.dive.data.dto.request.SignUpRequestDto
+import com.sopt.dive.data.dto.response.SignUpResponseDto
 import com.sopt.dive.ui.theme.DiveTheme
 import com.sopt.dive.viewmodel.AuthViewModel
 import kotlinx.coroutines.launch

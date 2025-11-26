@@ -1,4 +1,4 @@
-package com.sopt.dive.data
+package com.sopt.dive.model
 
 data class CardState(
     val isFront: Boolean = true, //카드 앞뒤 구분

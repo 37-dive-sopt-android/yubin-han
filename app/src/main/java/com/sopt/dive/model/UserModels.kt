@@ -1,4 +1,4 @@
-package com.sopt.dive.data
+package com.sopt.dive.model
 
 data class ProfileSummary(
     val nickname: String,

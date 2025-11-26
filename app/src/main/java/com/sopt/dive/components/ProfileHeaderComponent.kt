@@ -18,7 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sopt.dive.data.ProfileSummary
+import com.sopt.dive.model.ProfileSummary
 
 // Home 화면 상단 프로필 요약
 @Composable

@@ -1,20 +1,13 @@
 package com.sopt.dive.screens
 
-import android.provider.ContactsContract
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.OutlinedTextFieldDefaults.contentPadding
 import androidx.compose.material3.Text
-import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,9 +20,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sopt.dive.R
 import com.sopt.dive.components.ProfileHeaderComponent
-import com.sopt.dive.data.FeedItem
-import com.sopt.dive.data.ProfileSummary
-import com.sopt.dive.data.dummyFeeds
+import com.sopt.dive.model.FeedItem
+import com.sopt.dive.model.ProfileSummary
+import com.sopt.dive.model.dummyFeeds
 import com.sopt.dive.ui.theme.DiveTheme
 
 

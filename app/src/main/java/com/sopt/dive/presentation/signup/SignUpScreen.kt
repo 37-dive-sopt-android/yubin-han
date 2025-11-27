@@ -151,7 +151,7 @@ fun SignUpScreen(
 
         // UserName
         Text(
-            text = "UserName",
+            text = "USERNAME",
             modifier = Modifier.fillMaxWidth(),
             fontSize = 38.sp,
             textAlign = TextAlign.Start
@@ -207,7 +207,7 @@ fun SignUpScreen(
 
         // NICKNAME
         Text(
-            text = "name",
+            text = "NAME",
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Start,
             fontSize = 38.sp

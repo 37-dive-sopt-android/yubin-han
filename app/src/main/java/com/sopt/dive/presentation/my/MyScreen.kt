@@ -88,7 +88,7 @@ fun MyScreen(
         }
 
         Text(
-            text = "안녕하세요! ${userInfo.name} 입니다.",
+            text = "안녕하세요! ${userInfo.username} 입니다.",
             color = Color.Black,
             fontSize = 20.sp,
 
@@ -97,7 +97,7 @@ fun MyScreen(
 
 
         Text(
-            text = "닉네임: ${userInfo.username}",
+            text = "아이디: ${userInfo.username}",
             fontSize = 20.sp
         )
         Text(

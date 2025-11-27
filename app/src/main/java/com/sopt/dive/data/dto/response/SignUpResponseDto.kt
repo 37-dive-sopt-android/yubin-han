@@ -14,7 +14,7 @@ data class SignUpResponseDto(
     @SerialName("email")
     val email: String,
     @SerialName("age")
-    val age: Int,
+    val age: String,
     @SerialName("status")
     val status: String
 )

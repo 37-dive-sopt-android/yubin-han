@@ -1,8 +1,8 @@
 package com.sopt.dive.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.sopt.dive.model.CardState
-import com.sopt.dive.model.RotationAxis
+import com.sopt.dive.data.CardState
+import com.sopt.dive.data.RotationAxis
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

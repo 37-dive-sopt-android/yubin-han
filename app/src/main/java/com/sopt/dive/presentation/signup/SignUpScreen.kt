@@ -93,7 +93,7 @@ fun SignUpRoute(
             Toast.makeText(context, "이메일을 입력해주세요.", Toast.LENGTH_SHORT).show()
         } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             Toast.makeText(context, "올바른 이메일 형식이 아닙니다.", Toast.LENGTH_SHORT).show()
-        } else if ((age ?: (-1)) < 0) { // age가 null이거나 0보다 작으면
+        } else if ((age.toIntOrNull() ?: (-1)) < 0) { // age가 null이거나 0보다 작으면
             Toast.makeText(context, "나이는 0세 이상이어야 합니다.", Toast.LENGTH_SHORT).show()
         } else {
             viewModel.signUp()
@@ -109,7 +109,7 @@ fun SignUpRoute(
         onPasswordChange = { viewModel.password.value = it },
         onNameChange = { viewModel.name.value = it },
         onEmailChange = { viewModel.email.value = it },
-        onAgeChange = { viewModel.age.value = it.toIntOrNull() ?: 0 },
+        onAgeChange = { viewModel.age.value =it },
         onSignUpClick = onSignUpClick
     )
 
@@ -121,7 +121,7 @@ fun SignUpScreen(
     password: String,
     name: String,
     email: String,
-    age: Int,
+    age: String,
     onUsernameChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onNameChange: (String) -> Unit,
@@ -262,7 +262,7 @@ fun SignUpScreen(
 
         )
         TextField(
-            value = age.toString(),
+            value =age,
             onValueChange = onAgeChange,
             placeholder = { Text(text = "나이를 입력해주세요", color = Color.LightGray) },
             singleLine = true,
@@ -281,7 +281,7 @@ fun SignUpScreen(
         )
 
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(50.dp))
 
 
         Button(
@@ -308,7 +308,7 @@ private fun SignupPreview() {
             password = "",
             name = "",
             email = "",
-            age = 0,
+            age = "",
             onUsernameChange = {},
             onPasswordChange = {},
             onNameChange = {},

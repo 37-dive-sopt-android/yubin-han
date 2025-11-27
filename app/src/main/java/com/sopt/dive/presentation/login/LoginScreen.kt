@@ -112,7 +112,7 @@ private fun LoginScreen(
             fontWeight = FontWeight.Bold
         )
 
-        Spacer(modifier = Modifier.height(25.dp))
+        Spacer(modifier = Modifier.height(50.dp))
 
         Text(
             text = "ID",
@@ -137,7 +137,7 @@ private fun LoginScreen(
             )
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(40.dp))
 
         Text(
             text = "PW",

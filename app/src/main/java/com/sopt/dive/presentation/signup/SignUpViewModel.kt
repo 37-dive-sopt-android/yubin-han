@@ -18,11 +18,12 @@ class SignUpViewModel : ViewModel() {
     val password = MutableStateFlow("")
     val name = MutableStateFlow("")
     val email = MutableStateFlow("")
-    val age = MutableStateFlow(0)
+    val age = MutableStateFlow("")
 
     //성공하면 SignUpResponseDto 줌
     private val _signUpState = MutableStateFlow<UiState<SignUpResponseDto>>(UiState.Idle)
     val signUpState = _signUpState.asStateFlow()
+    val ageInt = age.value.toIntOrNull() ?: 0
 
     fun signUp() {
         viewModelScope.launch {
@@ -33,7 +34,7 @@ class SignUpViewModel : ViewModel() {
                 password = password.value,
                 name = name.value,
                 email = email.value,
-                age = age.value
+                age = ageInt
             )
             userRepository.signUp(request)
                 .onSuccess { response ->

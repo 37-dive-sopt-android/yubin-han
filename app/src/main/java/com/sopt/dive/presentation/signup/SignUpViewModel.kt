@@ -23,11 +23,11 @@ class SignUpViewModel : ViewModel() {
     //성공하면 SignUpResponseDto 줌
     private val _signUpState = MutableStateFlow<UiState<SignUpResponseDto>>(UiState.Idle)
     val signUpState = _signUpState.asStateFlow()
-    val ageInt = age.value.toIntOrNull() ?: 0
 
     fun signUp() {
         viewModelScope.launch {
             _signUpState.value = UiState.Loading
+            val ageInt = age.value.trim().toIntOrNull() ?: 0
 
             val request = SignUpRequestDto(
                 username = username.value,

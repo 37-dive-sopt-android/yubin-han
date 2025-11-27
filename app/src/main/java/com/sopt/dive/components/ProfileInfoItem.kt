@@ -1,5 +1,6 @@
 package com.sopt.dive.components
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,18 +21,22 @@ fun ProfileInfoItemComponent(
     value: String,
     modifier: Modifier = Modifier,
 
-) {
-    Text(
-        text = title,
-        modifier = Modifier.fillMaxWidth(),
-        fontSize = 38.sp,
-        fontWeight = FontWeight.Bold,
-        textAlign = TextAlign.Start
-    )
-    Text(
-        text = value,
-        color = Color.Black,
-        modifier = Modifier.fillMaxWidth()
-    )
-    Spacer(modifier = Modifier.height(50.dp))
+    ) {
+    Column(modifier = modifier) {
+        Text(
+            text = title,
+            Modifier.fillMaxWidth(),
+            fontSize = 38.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Start
+        )
+        Text(
+            text = value,
+            Modifier.fillMaxWidth(),
+            color = Color.Black,
+        )
+        Spacer(modifier = Modifier.height(50.dp))
+    }
+
+
 }

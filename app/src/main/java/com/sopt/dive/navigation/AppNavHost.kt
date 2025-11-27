@@ -5,23 +5,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import androidx.navigation.navOptions
-import com.sopt.dive.screens.AnimationScreen
-import com.sopt.dive.screens.HomeScreen
-import com.sopt.dive.screens.LoginScreen
-import com.sopt.dive.screens.Myscreen
-import com.sopt.dive.screens.SignupScreen
-import com.sopt.dive.viewmodel.AuthViewModel
-
-interface MainTabRoute : Route
-interface Route
+import com.sopt.dive.components.AppBottomBar
+import com.sopt.dive.presentation.animation.AnimationScreen
+import com.sopt.dive.presentation.home.HomeRoute
+import com.sopt.dive.presentation.login.LoginRoute
+import com.sopt.dive.presentation.my.MyRoute
+import com.sopt.dive.presentation.signup.SignUpRoute
 
 enum class Screen(val route: String) {
     Login("login"), // 로그인 화면
@@ -30,77 +23,52 @@ enum class Screen(val route: String) {
     Animation("Animation"), // 메인 탭 - 애니메이션
     My("my"), // 메인 탭 - 마이
 
-    MainGraph("main_graph?id={id}&pw={pw}&nickname={nickname}&hobby={hobby}")
+    MainGraph("main_graph")
 }
 
-const val MAIN_TAB_ROOT_ROUTE = "main_tab_root"
 
 @Composable
 fun AppNavHost(
     navController: NavHostController,
     paddingValues: PaddingValues,
-    authViewModel: AuthViewModel = viewModel()
 ) {
     NavHost(
         navController = navController,
         startDestination = Screen.Login.route,
         modifier = Modifier.padding(paddingValues)
     ) {
-        // ----------------------------------------------------
-        // 1. 인증 화면 (BottomBar 없음)
-        // ----------------------------------------------------
+        //로그인 화면
         composable(Screen.Login.route) {
-            LoginScreen(
-                viewModel = authViewModel,
+            LoginRoute(
                 onNavigateToSignup = {
                     navController.navigate(Screen.Signup.route)
                 },
-                onNavigateToMain = { id, pw, nickname, hobby ->
-                    navController.navigate(
-                        route = "main_graph?id=$id&pw=$pw&nickname=$nickname&hobby=$hobby",
-                        navOptions = navOptions {
-                            popUpTo(Screen.Login.route) { inclusive = true }
-                        }
-                    )
+                onNavigateToMain = {
+                    navController.navigate(Screen.MainGraph.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
                 }
             )
         }
 
+        //회원가입 화면
         composable(Screen.Signup.route) {
-            SignupScreen(
-                viewModel = authViewModel,
+            SignUpRoute(
                 onNavigateToLogin = {
+                    //회원가입 후 로그인 화면으로 돌아감
                     navController.popBackStack()
                 }
             )
         }
 
-        // ----------------------------------------------------
-        // 2. 메인 화면 그룹 (MainGraph) - BottomBar 포함
-        // ----------------------------------------------------
+        //메인 화면 그룹 (홈, 애니메이션, 마이)
         composable(
-            route = Screen.MainGraph.route,
-            arguments = listOf(
-                navArgument("id") { type = NavType.StringType },
-                navArgument("pw") { type = NavType.StringType },
-                navArgument("nickname") { type = NavType.StringType },
-                navArgument("hobby") { type = NavType.StringType }
-            )
-        ) { backStackEntry ->
-            // Nav Arguments에서 사용자 정보를 추출
-            val userId = backStackEntry.arguments?.getString("id") ?: ""
-            val userPw = backStackEntry.arguments?.getString("pw") ?: ""
-            val userNickname = backStackEntry.arguments?.getString("nickname") ?: ""
-            val userHobby = backStackEntry.arguments?.getString("hobby") ?: ""
+            route = Screen.MainGraph.route
 
+        ) {
             val mainTabNavController = rememberNavController()
-
             Scaffold(
-                bottomBar = {
-                    AppBottomBar(
-                        navController = mainTabNavController
-                    )
-                }
+                bottomBar = { AppBottomBar(navController =mainTabNavController) }
             ) { innerPadding ->
                 NavHost(
                     navController = mainTabNavController,
@@ -109,7 +77,7 @@ fun AppNavHost(
                 ) {
                     // 홈
                     composable(Screen.Home.route) {
-                        HomeScreen(userNickname = userNickname, contentPadding = innerPadding)
+                        HomeRoute(contentPadding = innerPadding)
                     }
 
                     // 애니메이션
@@ -119,12 +87,7 @@ fun AppNavHost(
 
                     // 마이
                     composable(Screen.My.route) {
-                        Myscreen(
-                            userId = userId,
-                            userPw = userPw,
-                            userNickname = userNickname,
-                            userHobby = userHobby
-                        )
+                        MyRoute()
                     }
                 }
             }

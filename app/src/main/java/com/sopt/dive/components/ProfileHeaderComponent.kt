@@ -18,7 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sopt.dive.model.ProfileSummary
+import com.sopt.dive.domain.model.ProfileSummary
 
 // Home 화면 상단 프로필 요약
 @Composable
@@ -26,18 +26,21 @@ fun ProfileHeaderComponent(
     profile: ProfileSummary,
     modifier: Modifier = Modifier
 ) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+    ) {
         Image(
             painter = painterResource(id = profile.profileImageResId),
             contentDescription = "프로필 사진",
-            modifier = Modifier
+            Modifier
                 .size(60.dp)
                 .clip(CircleShape)
                 .background(Color.Gray) // 이미지 없으면 회색 배경
         )
         Spacer(modifier = Modifier.width(16.dp))
         Column {
-            Text(text = profile.nickname, fontSize = 25.sp, fontWeight = FontWeight.Bold)
+            Text(text = profile.username, fontSize = 25.sp, fontWeight = FontWeight.Bold)
             Text(
                 text = profile.statusMessage, fontSize = 16.sp, color = Color.Black
             )

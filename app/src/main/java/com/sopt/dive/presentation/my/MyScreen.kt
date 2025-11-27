@@ -2,6 +2,7 @@ package com.sopt.dive.presentation.my
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
@@ -45,15 +45,18 @@ fun MyRoute(
             val userInfo = (uiState as UiState.Success).data
             MyScreen(userInfo = userInfo)
         }
+
         is UiState.Error -> {
             // 에러 화면
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(text = "에러 발생: ${(uiState as UiState.Error).message}")
             }
         }
+
         else -> {}
     }
 }
+
 @Composable
 fun MyScreen(
     userInfo: UserInfoDto
@@ -64,10 +67,10 @@ fun MyScreen(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .background(Color.White)
-            .padding(16.dp)
+            .padding(20.dp) ,
+        verticalArrangement = Arrangement.spacedBy(20.dp)
 
     ) {
-        Spacer(modifier = Modifier.height(25.dp))
 
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -77,17 +80,15 @@ fun MyScreen(
                 contentDescription = "프로필사진",
                 modifier = Modifier.size(50.dp)
             )
-            Spacer(modifier = Modifier.width(16.dp))
             Text(
-                text = "한유빈",
+                text ="${userInfo.name}",
                 color = Color.Black,
                 fontSize = 20.sp,
             )
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
         Text(
-            text = "안녕하세요! 한유빈입니다.",
+            text = "안녕하세요! ${userInfo.name} 입니다.",
             color = Color.Black,
             fontSize = 20.sp,
 
@@ -95,10 +96,24 @@ fun MyScreen(
         Spacer(modifier = Modifier.height(50.dp))
 
 
-        Text(text = "닉네임: ${userInfo.username}")
-        Text(text = "이름: ${userInfo.name}")
-        Text(text = "이메일: ${userInfo.email}")
-        Text(text = "나이: ${userInfo.age}")
+        Text(
+            text = "닉네임: ${userInfo.username}",
+            fontSize = 20.sp
+        )
+        Text(
+            text = "이름: ${userInfo.name}",
+            fontSize = 20.sp
+        )
+
+        Text(
+            text = "이메일: ${userInfo.email}",
+            fontSize = 20.sp
+        )
+
+        Text(
+            text = "나이: ${userInfo.age}",
+            fontSize = 20.sp
+        )
 
     }
 }
@@ -109,7 +124,7 @@ fun MyScreen(
 private fun MyScreenPreview() {
     DiveTheme {
         MyScreen(
-            userInfo = UserInfoDto(1,"yukong","한유빈","01yubin@naver.com",1,"")
+            userInfo = UserInfoDto(1, "yukong", "한유빈", "01yubin@naver.com", 1, "")
         )
     }
 }

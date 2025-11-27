@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.dive.data.dto.request.LoginRequestDto
 import com.sopt.dive.data.dto.response.LoginResponseDto
+import com.sopt.dive.data.local.AuthStorage
 import com.sopt.dive.data.util.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,6 +28,10 @@ class LoginViewModel : ViewModel() {
 
             userRepository.login(request)
                 .onSuccess { response ->
+                    val loginData=response.data
+                    //로그인 성공하면 아이디를 저장
+                    AuthStorage.setUserId(loginData.userId)
+
                     // response.data는 loginResponseDto
                     _loginState.value = UiState.Success(response.data)
                 }

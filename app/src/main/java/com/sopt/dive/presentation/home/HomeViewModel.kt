@@ -3,6 +3,7 @@ package com.sopt.dive.presentation.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.dive.data.dto.response.UserInfoDto
+import com.sopt.dive.data.local.AuthStorage
 import com.sopt.dive.data.util.UiState
 import com.sopt.dive.domain.model.FeedItem
 import com.sopt.dive.domain.repository.UserRepository
@@ -34,8 +35,14 @@ class HomeViewModel : ViewModel() {
         viewModelScope.launch {
             _profileState.value = UiState.Loading
 
-            // "1"번 유저라고 가정하고 요청 (실제론 로그인 시 저장한 ID 사용)
-            userRepository.getUserInfo(1)
+            //저장소에서 아이디 꺼내기
+            val myId= AuthStorage.getUserId()
+            if(myId==-1L){
+                _profileState.value=UiState.Error("로그인 정보가 없습니다.")
+                return@launch
+            }
+
+            userRepository.getUserInfo(myId)
                 .onSuccess { response ->
                     _profileState.value = UiState.Success(response.data)
                 }

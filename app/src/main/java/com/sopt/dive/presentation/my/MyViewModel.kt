@@ -3,6 +3,7 @@ package com.sopt.dive.presentation.my
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.dive.data.dto.response.UserInfoDto
+import com.sopt.dive.data.local.AuthStorage
 import com.sopt.dive.data.util.UiState
 import com.sopt.dive.domain.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,9 +25,13 @@ class MyViewModel : ViewModel() {
         viewModelScope.launch {
             _myInfoState.value = UiState.Loading
 
-            // ⭐️ 주의: 실제로는 로그인 때 받은 ID나 토큰을 저장해뒀다가 여기 써야 합니다.
-            // 지금은 테스트를 위해 임의의 ID나 "1" 등을 넣겠습니다.
-            userRepository.getUserInfo(1)
+            //저장소에서 아이디 꺼내기
+            val myId = AuthStorage.getUserId()
+            if (myId == -1L) {
+                _myInfoState.value = UiState.Error("로그인 정보가 없습니다.")
+                return@launch
+            }
+            userRepository.getUserInfo(myId)
                 .onSuccess { response ->
                     _myInfoState.value = UiState.Success(response.data)
                 }

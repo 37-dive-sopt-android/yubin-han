@@ -44,7 +44,7 @@ import com.sopt.dive.ui.theme.Purple40
 
 @Composable
 fun LoginRoute(
-    viewModel: LoginViewModel= viewModel(),
+    viewModel: LoginViewModel = viewModel(),
     onNavigateToSignup: () -> Unit,
     onNavigateToMain: () -> Unit
 ) {
@@ -54,35 +54,47 @@ fun LoginRoute(
 
     val context = LocalContext.current
 
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+
     LaunchedEffect(loginState) {
-        when(loginState){
-            is UiState.Success->{
+        when (loginState) {
+            is UiState.Success -> {
                 Toast.makeText(context, "로그인 성공", Toast.LENGTH_SHORT).show()
                 onNavigateToMain()
             }
-            is UiState.Error->{
+
+            is UiState.Error -> {
                 val message = (loginState as UiState.Error).message
                 Toast.makeText(context, "로그인 실패: $message", Toast.LENGTH_SHORT).show()
             }
+
             else -> {}
         }
     }
     val onLoginClick: () -> Unit = {
-        if (username.isBlank()||password.isBlank()) {
+        focusManager.clearFocus()
+        keyboardController?.hide()
+
+        if (username.isBlank() || password.isBlank()) {
             Toast.makeText(context, "아이디와 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
-        }else{
+        } else {
             viewModel.login()
         }
     }
 
 
-    LoginScreen (
-        username =username,
-        onUsernameChange = {  viewModel.username.value = it },
+    LoginScreen(
+        username = username,
+        onUsernameChange = { viewModel.username.value = it },
         password = password,
         onPasswordChange = { viewModel.password.value = it },
         onLoginClick = onLoginClick,
-        onSignupClick = onNavigateToSignup
+        onSignupClick = onNavigateToSignup,
+        onNextClick = {
+            focusManager.moveFocus(FocusDirection.Down)
+        }
     )
 }
 
@@ -93,10 +105,9 @@ private fun LoginScreen(
     password: String,
     onPasswordChange: (String) -> Unit,
     onLoginClick: () -> Unit,
-    onSignupClick: () -> Unit
+    onSignupClick: () -> Unit,
+    onNextClick: () -> Unit
 ) {
-    val focusManager = LocalFocusManager.current
-    val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(
         modifier = Modifier
@@ -128,7 +139,7 @@ private fun LoginScreen(
             placeholder = { Text(text = "아이디를 입력해주세요", color = Color.LightGray) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-            keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
+            keyboardActions = KeyboardActions(onNext = { onNextClick }),
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
@@ -157,7 +168,7 @@ private fun LoginScreen(
                 imeAction = ImeAction.Done,
                 keyboardType = KeyboardType.Password
             ),
-            keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
+            keyboardActions = KeyboardActions(onDone = { onLoginClick() }),
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
@@ -203,9 +214,10 @@ private fun Longinpreview() {
             username = "",
             password = "",
             onUsernameChange = {},
-            onPasswordChange =  {},
+            onPasswordChange = {},
             onSignupClick = {},
-            onLoginClick = {}
+            onLoginClick = {},
+            onNextClick = {}
         )
     }
 }

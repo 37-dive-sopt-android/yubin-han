@@ -1,1 +1,2 @@
-###두콩두콩세콩세콩 안두콩에다이브###
+# DIVE-SOPT-ANDROID-TEMPLATE
+DIVE SOPT Android 과제 템플릿입니다~

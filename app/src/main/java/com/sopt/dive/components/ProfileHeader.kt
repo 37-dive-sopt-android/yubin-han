@@ -20,9 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sopt.dive.domain.model.ProfileSummary
 
-// Home 화면 상단 프로필 요약
 @Composable
-fun ProfileHeaderComponent(
+fun ProfileHeader(
     profile: ProfileSummary,
     modifier: Modifier = Modifier
 ) {

@@ -26,7 +26,8 @@ import com.sopt.dive.domain.model.FeedItem
 
 @Composable
 fun FeedItemCard(
-    feed: FeedItem, modifier: Modifier = Modifier
+    feed: FeedItem,
+    modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),

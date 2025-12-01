@@ -81,7 +81,7 @@ fun MyScreen(
                 modifier = Modifier.size(50.dp)
             )
             Text(
-                text = "${userInfo.name}",
+                text = userInfo.name,
                 color = Color.Black,
                 fontSize = 20.sp,
             )

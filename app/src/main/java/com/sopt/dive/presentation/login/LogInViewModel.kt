@@ -1,4 +1,5 @@
 package com.sopt.dive.presentation.login
+
 import com.sopt.dive.domain.repository.UserRepository
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,8 +15,14 @@ class LoginViewModel : ViewModel() {
     private val userRepository = UserRepository()
 
     // 로그인 입력 데이터
-    val username = MutableStateFlow("")
-    val password = MutableStateFlow("")
+    //내부에서만 수정 가능한 변수
+    private val _username = MutableStateFlow("")
+
+    // 2. 외부에는 읽기 전용으로만 공개 (StateFlow)
+    val username = _username.asStateFlow()
+
+    private val _password = MutableStateFlow("")
+    val password = _password.asStateFlow()
 
     // 로그인 상태 관리
     private val _loginState = MutableStateFlow<UiState<LoginResponseDto>>(UiState.Idle)
@@ -28,7 +35,7 @@ class LoginViewModel : ViewModel() {
 
             userRepository.login(request)
                 .onSuccess { response ->
-                    val loginData=response.data
+                    val loginData = response.data
                     //로그인 성공하면 아이디를 저장
                     AuthStorage.setUserId(loginData.userId)
 
@@ -40,4 +47,14 @@ class LoginViewModel : ViewModel() {
                 }
         }
     }
+
+    fun updateUsername(newUsername: String) {
+        _username.value = newUsername
+    }
+
+    fun updatePassword(newPassword: String) {
+        _password.value = newPassword
+    }
+
+
 }

@@ -58,13 +58,17 @@ fun AnimationScreen(viewModel: AnimationViewModel = viewModel()) {
 
         // 뒤집기 버튼
         Button(
-            onClick = viewModel::flipCard // 버튼 클릭 시 ViewModel 함수 호출
-            , colors = ButtonDefaults.buttonColors(
+            onClick = viewModel::flipCard, // 버튼 클릭 시 ViewModel 함수 호출
+            colors = ButtonDefaults.buttonColors(
                 containerColor = Purple40,
                 contentColor = Color.White
             )
         ) {
-            Text(text = if (cardState.isFront) "앞면 보기" else "뒷면 보기")
+            if (cardState.isFront) {
+                Text(text = "앞면 보기")
+            } else {
+                Text(text = "뒷면 보기")
+            }
         }
     }
 }

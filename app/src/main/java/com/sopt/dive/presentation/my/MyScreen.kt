@@ -67,7 +67,7 @@ fun MyScreen(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .background(Color.White)
-            .padding(20.dp) ,
+            .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
 
     ) {
@@ -81,7 +81,7 @@ fun MyScreen(
                 modifier = Modifier.size(50.dp)
             )
             Text(
-                text ="${userInfo.name}",
+                text = userInfo.name,
                 color = Color.Black,
                 fontSize = 20.sp,
             )

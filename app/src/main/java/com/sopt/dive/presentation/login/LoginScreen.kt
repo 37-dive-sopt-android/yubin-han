@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -39,11 +40,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sopt.dive.data.util.UiState
 import com.sopt.dive.ui.theme.DiveTheme
+import com.sopt.dive.ui.theme.Purple40
 
 
 @Composable
 fun LoginRoute(
-    viewModel: LoginViewModel= viewModel(),
+    viewModel: LoginViewModel = viewModel(),
     onNavigateToSignup: () -> Unit,
     onNavigateToMain: () -> Unit
 ) {
@@ -53,35 +55,46 @@ fun LoginRoute(
 
     val context = LocalContext.current
 
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     LaunchedEffect(loginState) {
-        when(loginState){
-            is UiState.Success->{
+        when (val state = loginState) {
+            is UiState.Success -> {
                 Toast.makeText(context, "로그인 성공", Toast.LENGTH_SHORT).show()
                 onNavigateToMain()
             }
-            is UiState.Error->{
-                val message = (loginState as UiState.Error).message
+
+            is UiState.Error -> {
+                val message = state.message
                 Toast.makeText(context, "로그인 실패: $message", Toast.LENGTH_SHORT).show()
             }
+
             else -> {}
         }
     }
     val onLoginClick: () -> Unit = {
-        if (username.isBlank()||password.isBlank()) {
+        focusManager.clearFocus()
+        keyboardController?.hide()
+
+        if (username.isBlank() || password.isBlank()) {
             Toast.makeText(context, "아이디와 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
-        }else{
+        } else {
             viewModel.login()
         }
     }
 
 
-    LoginScreen (
-        username =username,
-        onUsernameChange = {  viewModel.username.value = it },
+    LoginScreen(
+        username = username,
+        onUsernameChange = viewModel::updateUsername,
         password = password,
-        onPasswordChange = { viewModel.password.value = it },
-        onLoginClick = onLoginClick,
-        onSignupClick = onNavigateToSignup
+        onPasswordChange = viewModel::updatePassword,
+        onLoginClick = { onLoginClick() },
+        onSignupClick = onNavigateToSignup,
+        onNextClick = {
+            focusManager.moveFocus(FocusDirection.Down)
+        }
     )
 }
 
@@ -91,11 +104,10 @@ private fun LoginScreen(
     onUsernameChange: (String) -> Unit,
     password: String,
     onPasswordChange: (String) -> Unit,
-    onLoginClick: () -> Unit,
-    onSignupClick: () -> Unit
+    onLoginClick: KeyboardActionScope.() -> Unit,
+    onNextClick: KeyboardActionScope.() -> Unit,
+    onSignupClick: () -> Unit,
 ) {
-    val focusManager = LocalFocusManager.current
-    val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(
         modifier = Modifier
@@ -127,7 +139,7 @@ private fun LoginScreen(
             placeholder = { Text(text = "아이디를 입력해주세요", color = Color.LightGray) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-            keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
+            keyboardActions = KeyboardActions(onNext = onNextClick),
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
@@ -156,7 +168,7 @@ private fun LoginScreen(
                 imeAction = ImeAction.Done,
                 keyboardType = KeyboardType.Password
             ),
-            keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
+            keyboardActions = KeyboardActions(onDone = onLoginClick),
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
@@ -171,9 +183,9 @@ private fun LoginScreen(
 
 
         Button(
-            onClick = onLoginClick,
+            onClick = { onLoginClick },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Blue,
+                containerColor = Purple40,
                 contentColor = Color.White
             ),
             modifier = Modifier.fillMaxWidth(),
@@ -202,9 +214,10 @@ private fun Longinpreview() {
             username = "",
             password = "",
             onUsernameChange = {},
-            onPasswordChange =  {},
+            onPasswordChange = {},
             onSignupClick = {},
-            onLoginClick = {}
+            onLoginClick = {},
+            onNextClick = {}
         )
     }
 }

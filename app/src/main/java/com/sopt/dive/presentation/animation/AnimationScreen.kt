@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -23,14 +24,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.sopt.dive.presentation.animation.AnimationViewModel
 import com.sopt.dive.ui.theme.DiveTheme
+import com.sopt.dive.ui.theme.Purple40
 
 
 @Composable
@@ -56,9 +58,17 @@ fun AnimationScreen(viewModel: AnimationViewModel = viewModel()) {
 
         // 뒤집기 버튼
         Button(
-            onClick = viewModel::flipCard // 버튼 클릭 시 ViewModel 함수 호출
+            onClick = viewModel::flipCard, // 버튼 클릭 시 ViewModel 함수 호출
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Purple40,
+                contentColor = Color.White
+            )
         ) {
-            Text(text = if (cardState.isFront) "앞면 보기" else "뒷면 보기")
+            if (cardState.isFront) {
+                Text(text = "앞면 보기")
+            } else {
+                Text(text = "뒷면 보기")
+            }
         }
     }
 }

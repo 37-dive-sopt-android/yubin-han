@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sopt.dive.data.util.UiState
 import com.sopt.dive.ui.theme.DiveTheme
+import com.sopt.dive.ui.theme.Purple40
 
 @Composable
 fun SignUpRoute(
@@ -287,7 +288,7 @@ fun SignUpScreen(
         Button(
             onClick = onSignUpClick,
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Blue,
+                containerColor = Purple40,
                 contentColor = Color.White
             ),
             modifier = Modifier.fillMaxWidth(),

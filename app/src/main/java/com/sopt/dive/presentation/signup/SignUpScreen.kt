@@ -1,17 +1,21 @@
 package com.sopt.dive.presentation.signup
 
 import android.widget.Toast
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -25,7 +29,6 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -110,7 +113,7 @@ fun SignUpRoute(
         onPasswordChange = { viewModel.password.value = it },
         onNameChange = { viewModel.name.value = it },
         onEmailChange = { viewModel.email.value = it },
-        onAgeChange = { viewModel.age.value =it },
+        onAgeChange = { viewModel.age.value = it },
         onSignUpClick = onSignUpClick
     )
 
@@ -132,11 +135,13 @@ fun SignUpScreen(
 ) {
 
     val focusManager = LocalFocusManager.current
-    val keyboardController = LocalSoftwareKeyboardController.current
+    val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .verticalScroll(scrollState)
+            .imePadding(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(25.dp))
@@ -243,8 +248,8 @@ fun SignUpScreen(
             onValueChange = onEmailChange,
             placeholder = { Text(text = "이메일 입력해주세요", color = Color.LightGray) },
             singleLine = true,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
@@ -263,7 +268,7 @@ fun SignUpScreen(
 
         )
         TextField(
-            value =age,
+            value = age,
             onValueChange = onAgeChange,
             placeholder = { Text(text = "나이를 입력해주세요", color = Color.LightGray) },
             singleLine = true,
@@ -271,7 +276,7 @@ fun SignUpScreen(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Done
             ),
-            keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
+            keyboardActions = KeyboardActions(onDone = { KeyboardActions(onDone = { focusManager.clearFocus() }) }),
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
@@ -284,19 +289,26 @@ fun SignUpScreen(
 
         Spacer(modifier = Modifier.height(50.dp))
 
-
-        Button(
-            onClick = onSignUpClick,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Purple40,
-                contentColor = Color.White
-            ),
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp)
+        androidx.compose.material3.Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+                .clickable(
+                    interactionSource = androidx.compose.runtime.remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = onSignUpClick
+                ),
+            shape = RoundedCornerShape(16.dp),
+            color = Purple40,
+            contentColor = Color.White
         ) {
-            Text(text = "회원가입하기")
+            Box(contentAlignment = Alignment.Center) {
+                Text(
+                    text = "회원가입하기"
+                )
+            }
         }
-
+        Spacer(modifier = Modifier.height(20.dp))
     }
 }
 

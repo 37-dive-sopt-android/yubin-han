@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.sopt.dive.components.AppBottomBar
+import com.sopt.dive.data.local.DiveSharedPreferences
 import com.sopt.dive.presentation.animation.AnimationScreen
 import com.sopt.dive.presentation.home.HomeRoute
 import com.sopt.dive.presentation.login.LoginRoute
@@ -32,9 +33,14 @@ fun AppNavHost(
     navController: NavHostController,
     paddingValues: PaddingValues,
 ) {
+    //현재 저장된 로그인 상태 확인(true/false)
+    val isLogin= DiveSharedPreferences.isLogin
+    //로그인 상태에 따라 시작 지점 결정 로그인 되어있다면 MainGraph로 아니면 Login 화면으로
+    val startDestination = if (isLogin) Screen.MainGraph.route else Screen.Login.route
+
     NavHost(
         navController = navController,
-        startDestination = Screen.Login.route,
+        startDestination =startDestination,
         modifier = Modifier.padding(paddingValues)
     ) {
         //로그인 화면
@@ -45,6 +51,7 @@ fun AppNavHost(
                 },
                 onNavigateToMain = {
                     navController.navigate(Screen.MainGraph.route) {
+                        //로그인 후 마이로 갈 때, 뒤로가기 누르면 로그인 화면 안 나오게 스택 제거
                         popUpTo(Screen.Login.route) { inclusive = true }
                     }
                 }

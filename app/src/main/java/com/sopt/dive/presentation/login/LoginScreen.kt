@@ -77,7 +77,6 @@ fun LoginRoute(
     val onLoginClick: () -> Unit = {
         focusManager.clearFocus()
         keyboardController?.hide()
-
         if (username.isBlank() || password.isBlank()) {
             Toast.makeText(context, "아이디와 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
         } else {
@@ -105,10 +104,12 @@ private fun LoginScreen(
     onUsernameChange: (String) -> Unit,
     password: String,
     onPasswordChange: (String) -> Unit,
-    onLoginClick: KeyboardActionScope.() -> Unit,
+    onLoginClick: () -> Unit,
     onNextClick: KeyboardActionScope.() -> Unit,
     onSignupClick: () -> Unit,
 ) {
+    val focusManager = LocalFocusManager.current
+
 
     Column(
         modifier = Modifier
@@ -166,10 +167,10 @@ private fun LoginScreen(
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done,
+                imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Password
             ),
-            keyboardActions = KeyboardActions(onDone = onLoginClick),
+            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
@@ -189,7 +190,7 @@ private fun LoginScreen(
                 .clickable(
                     interactionSource = androidx.compose.runtime.remember { MutableInteractionSource() },
                     indication = null,
-                    onClick = { onLoginClick }
+                    onClick = onLoginClick
                 ),
             shape = RoundedCornerShape(16.dp),
             color = Purple40,

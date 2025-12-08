@@ -18,7 +18,7 @@ class LoginViewModel : ViewModel() {
     //내부에서만 수정 가능한 변수
     private val _username = MutableStateFlow("")
 
-    // 2. 외부에는 읽기 전용으로만 공개 (StateFlow)
+    // 외부에는 읽기 전용으로만 공개 (StateFlow)
     val username = _username.asStateFlow()
 
     private val _password = MutableStateFlow("")

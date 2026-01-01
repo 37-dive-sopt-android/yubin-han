@@ -2,6 +2,8 @@ package com.sopt.dive.presentation.login
 
 import android.widget.Toast
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,8 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -76,7 +77,6 @@ fun LoginRoute(
     val onLoginClick: () -> Unit = {
         focusManager.clearFocus()
         keyboardController?.hide()
-
         if (username.isBlank() || password.isBlank()) {
             Toast.makeText(context, "아이디와 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
         } else {
@@ -104,10 +104,12 @@ private fun LoginScreen(
     onUsernameChange: (String) -> Unit,
     password: String,
     onPasswordChange: (String) -> Unit,
-    onLoginClick: KeyboardActionScope.() -> Unit,
+    onLoginClick: () -> Unit,
     onNextClick: KeyboardActionScope.() -> Unit,
     onSignupClick: () -> Unit,
 ) {
+    val focusManager = LocalFocusManager.current
+
 
     Column(
         modifier = Modifier
@@ -165,10 +167,10 @@ private fun LoginScreen(
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done,
+                imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Password
             ),
-            keyboardActions = KeyboardActions(onDone = onLoginClick),
+            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
@@ -181,26 +183,36 @@ private fun LoginScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-
-        Button(
-            onClick = { onLoginClick },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Purple40,
-                contentColor = Color.White
-            ),
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp)
+        androidx.compose.material3.Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+                .clickable(
+                    interactionSource = androidx.compose.runtime.remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = onLoginClick
+                ),
+            shape = RoundedCornerShape(16.dp),
+            color = Purple40,
+            contentColor = Color.White
         ) {
-            Text(text = "Welcome To SOPT")
+            Box(contentAlignment = Alignment.Center) {
+                Text(
+                    text = "Welcome To SOPT"
+                )
+            }
         }
-
 
         Text(
             text = "회원가입하기",
             textDecoration = TextDecoration.Underline,
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable(onClick = onSignupClick),
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = onSignupClick
+                ),
             textAlign = TextAlign.Center
         )
     }
